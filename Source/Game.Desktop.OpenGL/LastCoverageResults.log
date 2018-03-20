@@ -1,0 +1,59 @@
+[2018-01-17 15:53:49] [info] Start Program:
+Path:"C:\dev\Students\CH14\ksrinivasan\Spring2018\FieaGameEngine\Source\Game.Desktop.OpenGL\Bin\Win32\Debug\Game.Desktop.OpenGL.exe"
+Arguments:
+Working directory: "C:\dev\Students\CH14\ksrinivasan\Spring2018\FieaGameEngine\Source\Game.Desktop.OpenGL\"
+Modules: Selected: C:\dev\Students\CH14\ksrinivasan\Spring2018\FieaGameEngine\Source\UnitTest.Library.Desktop\Bin\Win32\Debug\UnitTest.Library.Desktop.dll C:\dev\Students\CH14\ksrinivasan\Spring2018\FieaGameEngine\Source\Library.Desktop\Bin\Win32\Debug\Library.Desktop.lib Excluded: 
+Sources: Selected: C:\dev\Students\CH14\ksrinivasan\Spring2018\FieaGameEngine\Source\Library.Shared C:\dev\Students\CH14\ksrinivasan\Spring2018\FieaGameEngine\Source\UnitTest.Library.Desktop C:\dev\Students\CH14\ksrinivasan\Spring2018\FieaGameEngine\Source\Library.Desktop C:\dev\Students\CH14\ksrinivasan\Spring2018\FieaGameEngine\Source\Library.Shared Excluded: 
+Log Level: Normal
+Cover Children: 0
+Aggregate by file: 1
+Continue after C++ exception: 0
+Optimized build support: 0
+Export: Binary C:\Users\ksrinivasan\AppData\Local\Temp\vm1krcmm.as4 
+Input coverage: 
+Unified diff: 
+Excluded line regular expressions: 
+
+[2018-01-17 15:53:49] [info] Module: C:\dev\Students\CH14\ksrinivasan\Spring2018\FieaGameEngine\Source\Game.Desktop.OpenGL\Bin\Win32\Debug\Game.Desktop.OpenGL.exe is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\ntdll.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\kernel32.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\KernelBase.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\dev\Students\CH14\ksrinivasan\Spring2018\FieaGameEngine\Source\Game.Desktop.OpenGL\Bin\Win32\Debug\glfw3.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\opengl32.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\dev\Students\CH14\ksrinivasan\Spring2018\FieaGameEngine\Source\Game.Desktop.OpenGL\Bin\Win32\Debug\glew32.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\msvcp140d.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\msvcrt.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\vcruntime140d.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\advapi32.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\sechost.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\rpcrt4.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\ucrtbased.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\sspicli.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\cryptbase.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\bcryptprimitives.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\user32.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\win32u.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\gdi32.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\gdi32full.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\msvcp_win.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\winmm.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\ucrtbase.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\msvcr120.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\winmmbase.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\winmmbase.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\cfgmgr32.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\winmmbase.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\glu32.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\imm32.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [info] Module: C:\Windows\SysWOW64\combase.dll is skipped because it matches no selected patterns
+[2018-01-17 15:53:49] [error] 
+
+----------------------------------------------------
+*** Unhandled exception code: 3765269347: Exception C++
+----------------------------------------------------
+If your application was built with optimization enabled, make sure you use --optimized_build
+
+[2018-01-17 15:53:49] [info] ----------------------------------------------------
+[2018-01-17 15:53:49] [info] Coverage binary generated in file: C:\Users\ksrinivasan\AppData\Local\Temp\vm1krcmm.as4
+[2018-01-17 15:53:49] [info] ----------------------------------------------------
+[2018-01-17 15:53:49] [error] Your program stop with error code: -529697949

@@ -1,0 +1,74 @@
+{
+  "Health": 
+  {
+    "type": "Integer",
+    "size": 1,
+    "value": 100
+  },
+  "Speed": 
+  {
+    "type": "Float",
+    "size": 1,
+    "value": 10
+  },
+  "PlayerName": 
+  {
+    "type": "String",
+    "size": 1,
+    "value": "Player1"
+  },
+  "Armor": 
+  {
+    "type": "Integer",
+    "size": 3,
+    "value": [ 100, 50, 75 ]
+  },
+  "Skills": 
+  {
+    "Invisibility": 
+    {
+      "type": "Integer",
+      "size": 1,
+      "value": 3
+    },
+    "Dash": {
+      "type": "Integer",
+      "size": 1,
+      "value": 3
+    },
+
+    "ElementalPowers": 
+    {
+      "Fire": 
+      {
+        "type": "Integer",
+        "size": 1,
+        "value": 5
+      }
+    }
+  },
+  "Position": 
+  {
+    "type": "Vector4",
+    "size": 1,
+    "value": "vec4(1.0, 5.3, 2.5, 8.4)"
+  },
+  "WVP": 
+  {
+    "type": "Matrix4x4",
+    "size": 1,
+    "value": "mat4x4((1.0, 0.0, 0.0, 0.0),(0.0, 1.0, 0.0, 0.0),(0.0, 0.0, 1.0, 0.0),(0.0, 0.0, 1.0, 1.0))"
+  },
+  "CoolDowns": 
+  {
+    "type": "Float",
+    "size": 3,
+    "value": [ 7.0, 5.0, 4.5 ]
+  },
+  "Items": 
+  {
+    "type": "String",
+    "size": 3,
+    "value": ["HP Potion", "SP Potion", "Invulnerability Potion"]
+  }
+}

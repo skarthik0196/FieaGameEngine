@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="Foo.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="AttributedFoo.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="SListTest.cpp" />
+    <ClCompile Include="Foo.cpp" />
+    <ClCompile Include="VectorTest.cpp" />
+    <ClCompile Include="HashMapTest.cpp" />
+    <ClCompile Include="DatumTest.cpp" />
+    <ClCompile Include="ScopeTest.cpp" />
+    <ClCompile Include="AttributedTest.cpp" />
+    <ClCompile Include="AttributedFoo.cpp" />
+    <ClCompile Include="ParsingTests.cpp" />
+    <ClCompile Include="FactoryTest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="UnitTest.Library.Desktop.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="..\..\External\Scripts\Test.json">
+      <Filter>Scripts</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{c032a09d-9172-4a69-bcc6-ed4a523f02d2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
