@@ -1,9 +1,6 @@
 #pragma once
 #include "AbstractFactory.h"
 
-//#define CreateConcreteFactory(ConcreteFactoryType, AbstractFactoryType)	
-//ConcreteFactory<ConcreteType, AbstractType> Factory_##ConcreteType(std::string(#ConcreteType));
-
 /// <summary>
 /// The following Macro creates a Concrete Factory of the passed in type
 /// </summary>
