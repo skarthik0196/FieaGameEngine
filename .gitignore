@@ -135,3 +135,4 @@ Code Coverage/
 .vs/
 Build/CoverageReport/
 Build/packages/
+Source/UnitTest.Library.Desktop/Obj/
