@@ -140,6 +140,7 @@ namespace UnitTestLibraryDesktop
 			AttributedFoo A1;
 			A1.ContrivedValueChangingFunction();
 			AttributedFoo A2(A1);
+			Assert::IsTrue(A2["E1"] == A1["E1"]);
 
 			Assert::IsTrue(A1 == A2);
 		}

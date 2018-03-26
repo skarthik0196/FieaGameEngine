@@ -19,6 +19,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Attributed.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ConcreteFactory.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Datum.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Entity.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)HashMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)JsonParseHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)JsonParseHelperTable.h" />
@@ -42,6 +43,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Entity.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)AbstractFactory.inl">
       <FileType>CppHeader</FileType>
     </ClInclude>
