@@ -71,12 +71,13 @@ namespace FieaGameEngine
 
 	World* Sector::GetWorld() const
 	{
-		return CurrentWorld;
+		assert(GetParent()->Is("World"));
+		return static_cast<World*>(GetParent());
 	}
 
 	void Sector::SetWorld(World& world)
 	{
-		CurrentWorld = &world;
+		world.Adopt(*this, "Sectors");
 	}
 
 	Entity* Sector::CreateEntity(const std::string & className, const std::string & instanceName)
@@ -85,8 +86,6 @@ namespace FieaGameEngine
 		
 		newEntity->SetName(instanceName);
 		newEntity->SetSector(*this);
-
-		this->Adopt(*newEntity, "Entities");
 
 		return newEntity;
 	}

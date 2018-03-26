@@ -81,7 +81,6 @@ namespace FieaGameEngine
 	Sector * World::CreateSector(const std::string& instanceName)
 	{
 		Sector *newSector = new Sector();
-		Adopt(*newSector, "Sectors");
 		newSector->SetName(instanceName);
 		newSector->SetWorld(*this);
 

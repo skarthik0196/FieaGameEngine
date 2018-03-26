@@ -71,12 +71,12 @@ namespace FieaGameEngine
 
 	Sector* Entity::GetSector()
 	{
-		return CurrentSector;
+		return static_cast<Sector*>(GetParent());
 	}
 
-	void Entity::SetSector(Sector & sector)
+	void Entity::SetSector(Sector& sector)
 	{
-		CurrentSector = &sector;
+		sector.Adopt(*this, "Entities");
 	}
 
 	void Entity::InitializeSignatures()

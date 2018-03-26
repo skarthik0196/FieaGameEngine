@@ -35,7 +35,6 @@ namespace FieaGameEngine
 		void UpdateExternalStorage();
 
 		std::string Name;
-		World* CurrentWorld{ nullptr };
 	};
 }
 
