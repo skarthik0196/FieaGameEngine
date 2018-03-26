@@ -1,8 +1,17 @@
 #include "pch.h"
 #include "Entity.h"
+#include "Sector.h"
+#include "World.h"
 
 namespace FieaGameEngine
 {
+	RTTI_DEFINITIONS(Entity)
+
+	Entity::Entity() : Attributed()
+	{
+		InitializeSignatures();
+	}
+
 	Entity::Entity(const std::string& name) :Attributed(), Name(name)
 	{
 		InitializeSignatures();
@@ -50,12 +59,17 @@ namespace FieaGameEngine
 		Name = name;
 	}
 
-	void Entity::Update()
+	const std::string & Entity::GetName()
 	{
-
+		return Name;
 	}
 
-	Sector * Entity::GetSector()
+	void Entity::Update(WorldState& worldState)
+	{
+		worldState.CurrentEntity = this;
+	}
+
+	Sector* Entity::GetSector()
 	{
 		return CurrentSector;
 	}

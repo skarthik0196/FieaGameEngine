@@ -1,13 +1,18 @@
 #pragma once
 #include "Attributed.h"
-#include <string>
+#include "WorldState.h"
 
 namespace FieaGameEngine
 {
 	class Sector;
+	class World;
+
 	class Entity : public Attributed
 	{
+		RTTI_DECLARATIONS(Entity, Attributed)
+
 	public:
+		Entity();
 		explicit Entity(const std::string& name);
 		virtual ~Entity();
 		Entity(const Entity& rhs);
@@ -18,7 +23,9 @@ namespace FieaGameEngine
 
 
 		void SetName(const std::string& name);
-		void Update();
+		const std::string& GetName();
+
+		void Update(WorldState& worldState);
 		Sector* GetSector();
 		void SetSector(Sector& sector);
 

@@ -19,6 +19,7 @@
     <ClCompile Include="AttributedFoo.cpp" />
     <ClCompile Include="ParsingTests.cpp" />
     <ClCompile Include="FactoryTest.cpp" />
+    <ClCompile Include="EntityWorldAndSectorTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="UnitTest.Library.Desktop.rc" />
