@@ -136,3 +136,4 @@ Code Coverage/
 Build/CoverageReport/
 Build/packages/
 Source/UnitTest.Library.Desktop/Obj/
+Source/UnitTest.Library.Desktop/Bin/

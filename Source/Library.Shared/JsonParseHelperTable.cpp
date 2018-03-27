@@ -1,5 +1,9 @@
 #include "pch.h"
 #include "JsonParseHelperTable.h"
+#include "AbstractFactory.h"
+#include "ConcreteFactory.h"
+#include "Sector.h"
+#include "Entity.h"
 
 namespace FieaGameEngine
 {
@@ -40,7 +44,7 @@ namespace FieaGameEngine
 		}
 	}
 
-	bool JsonParseHelperTable::StartElementHandler(JsonParseMaster::SharedData& sharedData, std::string & name, Json::Value & values)
+	bool JsonParseHelperTable::StartElementHandler(JsonParseMaster::SharedData& sharedData, std::string& name, Json::Value& values)
 	{
 		bool Result = false;
 		TableSharedData* CustomSharedData = (&sharedData)->As<TableSharedData>();
@@ -50,7 +54,17 @@ namespace FieaGameEngine
 			
 			if (values.get(values.getMemberNames()[0], values).type() == Json::ValueType::objectValue)
 			{
-				CustomSharedData->SharedScope = &CustomSharedData->SharedScope->AppendScope(name);
+				auto splitPosition = name.find("__");
+				if (splitPosition != std::string::npos)
+				{
+					std::string instanceName = name.substr(0, splitPosition);
+					std::string className = name.substr(splitPosition + 2, std::string::npos);
+					CustomSharedData->SharedScope = static_cast<Scope*>(CustomSharedData->SharedScope->As<Sector>()->CreateEntity(className, instanceName));
+				}
+				else
+				{
+					CustomSharedData->SharedScope = &CustomSharedData->SharedScope->AppendScope(name);
+				}
 			}
 			else
 			{

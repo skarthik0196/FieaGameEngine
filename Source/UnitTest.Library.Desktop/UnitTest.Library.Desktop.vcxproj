@@ -216,6 +216,7 @@ Xcopy  /e /y  "$(SolutionDir)..\External\Scripts" "$(OutDir)Scripts"</Command>
     <ResourceCompile Include="UnitTest.Library.Desktop.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\External\Scripts\EntityParseTest.json" />
     <None Include="..\..\External\Scripts\Test.json" />
     <None Include="packages.config" />
   </ItemGroup>

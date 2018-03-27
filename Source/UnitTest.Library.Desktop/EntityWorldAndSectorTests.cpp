@@ -13,6 +13,9 @@
 #include "World.h"
 #include "AbstractFactory.h"
 #include "ConcreteFactory.h"
+#include "JsonParseHelper.h"
+#include "JsonParseMaster.h"
+#include "JsonParseHelperTable.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace FieaGameEngine;
@@ -159,6 +162,30 @@ namespace UnitTestLibraryDesktop
 			Datum& Sectors = W1.GetSectors();
 			Assert::AreEqual(2U, Sectors.Length());
 			Assert::IsTrue(S1 == Sectors.Get<Scope*>(0));
+
+			AbstractFactory<RTTI>::ClearFactories();
+		}
+
+		TEST_METHOD(Parsing)
+		{
+			CreateConcreteFactory(Entity, RTTI)
+
+			std::string FileName = "Scripts/EntityParseTest.json";
+
+			World W1;
+			Sector *S1 = W1.CreateSector("S1");
+			JsonParseHelperTable::TableSharedData SharedScope(*S1);
+			JsonParseMaster Master1(SharedScope);
+
+			JsonParseHelperTable TableHelper;
+			Master1.AddHelper(TableHelper);
+			Master1.ParseFromFile(FileName);
+
+			Assert::AreEqual((*S1)["Weather"].Get<std::string>(0), std::string("Sunny"));
+			Assert::AreEqual(1U, S1->GetEntities().Length());
+			Entity *E1 = (*S1)["Entities"].Get<Scope*>(0)->As<Entity>();
+			Assert::AreEqual((*E1)["Invisibility"].Get<int32_t>(0), 3);
+			Assert::AreEqual((*E1)["Dash"].Get<int32_t>(0), 3);
 
 			AbstractFactory<RTTI>::ClearFactories();
 		}
