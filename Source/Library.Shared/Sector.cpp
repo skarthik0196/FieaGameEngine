@@ -15,7 +15,7 @@ namespace FieaGameEngine
 		InitializeSignatures();
 	}
 
-	Sector::Sector(std::string& name) : Attributed(), Name(name)
+	Sector::Sector(const std::string& name) : Attributed(), Name(name)
 	{
 		InitializeSignatures();
 	}
@@ -82,7 +82,7 @@ namespace FieaGameEngine
 
 	Entity* Sector::CreateEntity(const std::string & className, const std::string & instanceName)
 	{
-		Entity *newEntity = AbstractFactory<RTTI>::Create(className)->As<Entity>();
+		Entity *newEntity = AbstractFactory<Entity>::Create(className)->As<Entity>();
 		
 		newEntity->SetName(instanceName);
 		newEntity->SetSector(*this);

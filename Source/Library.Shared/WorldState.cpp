@@ -21,4 +21,8 @@ namespace FieaGameEngine
 	{
 		return GTime;
 	}
+	GameClock & WorldState::GetGameClock()
+	{
+		return GClock;
+	}
 }

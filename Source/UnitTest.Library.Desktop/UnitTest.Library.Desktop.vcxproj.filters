@@ -6,6 +6,7 @@
     <ClInclude Include="Foo.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="AttributedFoo.h" />
+    <ClInclude Include="TestEntity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -20,6 +21,7 @@
     <ClCompile Include="ParsingTests.cpp" />
     <ClCompile Include="FactoryTest.cpp" />
     <ClCompile Include="EntityWorldAndSectorTests.cpp" />
+    <ClCompile Include="TestEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="UnitTest.Library.Desktop.rc" />

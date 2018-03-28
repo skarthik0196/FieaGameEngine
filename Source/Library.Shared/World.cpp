@@ -87,12 +87,12 @@ namespace FieaGameEngine
 		return newSector;
 	}
 
-	const WorldState& World::GetWorldState() const
+	WorldState& World::GetWorldState()
 	{
 		return CurrentWorldState;
 	}
 
-	Datum & World::GetSectors()
+	Datum& World::GetSectors()
 	{
 		return (*this)["Sectors"];
 	}

@@ -1013,35 +1013,38 @@ namespace FieaGameEngine
 
 	void Datum::Resize(const uint32_t& size)
 	{
-		if (Type == DatumType::None || IsExternalStorage == true)
+		if (Type == DatumType::None)
 		{
 			throw std::runtime_error("No Type Initialized or External Storage");
 		}
-		if (Capacity < size)
+		if (!IsExternalStorage)
 		{
-			Reserve(size);
-			if (Type == DatumType::String)
+			if (Capacity < size)
 			{
-				for (uint32_t i = Size; i < size; ++i)
+				Reserve(size);
+				if (Type == DatumType::String)
 				{
-					new(&Data.StringValues[i])std::string();
+					for (uint32_t i = Size; i < size; ++i)
+					{
+						new(&Data.StringValues[i])std::string();
+					}
 				}
+				Size = size;
 			}
-			Size = size;
-		}
-		else
-		{
-			if (Type == DatumType::String)
+			else
 			{
-				for (uint32_t i = Size-1; i > size-1; --i)
+				if (Type == DatumType::String)
 				{
-					using namespace std;
-					Data.StringValues[i].~string();
+					for (uint32_t i = Size - 1; i > size - 1; --i)
+					{
+						using namespace std;
+						Data.StringValues[i].~string();
+					}
 				}
+				Size = size;
+				Data.GeneralPurposePointer = std::realloc(Data.GeneralPurposePointer, Size*TypeSizeMap[static_cast<int32_t>(Type)]);
+				Capacity = Size;
 			}
-			Size = size;
-			Data.GeneralPurposePointer = std::realloc(Data.GeneralPurposePointer, Size*TypeSizeMap[static_cast<int32_t>(Type)]);
-			Capacity = Size;
 		}
 	}
 

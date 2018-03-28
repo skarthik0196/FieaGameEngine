@@ -4,6 +4,7 @@
 #include "ConcreteFactory.h"
 #include "Sector.h"
 #include "Entity.h"
+#include "World.h"
 
 namespace FieaGameEngine
 {
@@ -59,7 +60,18 @@ namespace FieaGameEngine
 				{
 					std::string instanceName = name.substr(0, splitPosition);
 					std::string className = name.substr(splitPosition + 2, std::string::npos);
-					CustomSharedData->SharedScope = static_cast<Scope*>(CustomSharedData->SharedScope->As<Sector>()->CreateEntity(className, instanceName));
+					if (className.find("Entity") != std::string::npos)
+					{
+						CustomSharedData->SharedScope = static_cast<Scope*>(CustomSharedData->SharedScope->As<Sector>()->CreateEntity(className, instanceName));
+					}
+					else if(className.find("Sector") != std::string::npos)
+					{
+						CustomSharedData->SharedScope = static_cast<Scope*>(CustomSharedData->SharedScope->As<World>()->CreateSector(instanceName));
+					}
+					else
+					{
+						throw std::runtime_error("Invalid Type");
+					}
 				}
 				else
 				{

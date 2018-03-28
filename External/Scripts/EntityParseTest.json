@@ -5,19 +5,37 @@
     "size": 1,
     "value": "Sunny"
   },
-  "Skills__Entity": 
+  "S1__Sector": 
   {
-    "Invisibility": 
+    "Skills__Entity": 
     {
-      "type": "Integer",
-      "size": 1,
-      "value": 3
+      "Invisibility": 
+      {
+        "type": "Integer",
+        "size": 1,
+        "value": 3
+      },
+      "Dash": 
+      {
+        "type": "Integer",
+        "size": 1,
+        "value": 3
+      }
     },
-    "Dash": 
+    "NPC's": 
     {
       "type": "Integer",
       "size": 1,
-      "value": 3
+      "value": 8
+    },
+    "CharacterStats__TestEntity": 
+    {
+      "Health": 
+      {
+        "type": "Integer",
+        "size": 1,
+        "value": 100
+      }
     }
   }
 }

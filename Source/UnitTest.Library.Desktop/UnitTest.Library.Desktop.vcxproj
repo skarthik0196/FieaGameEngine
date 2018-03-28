@@ -192,6 +192,7 @@ Xcopy  /e /y  "$(SolutionDir)..\External\Scripts" "$(OutDir)Scripts"</Command>
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TestEntity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AttributedFoo.cpp" />
@@ -210,6 +211,7 @@ Xcopy  /e /y  "$(SolutionDir)..\External\Scripts" "$(OutDir)Scripts"</Command>
     </ClCompile>
     <ClCompile Include="ScopeTest.cpp" />
     <ClCompile Include="SListTest.cpp" />
+    <ClCompile Include="TestEntity.cpp" />
     <ClCompile Include="VectorTest.cpp" />
   </ItemGroup>
   <ItemGroup>

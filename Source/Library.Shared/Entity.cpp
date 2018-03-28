@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "Sector.h"
 #include "World.h"
+#include <cassert>
 
 namespace FieaGameEngine
 {
@@ -71,6 +72,7 @@ namespace FieaGameEngine
 
 	Sector* Entity::GetSector()
 	{
+		assert(GetParent()->Is("Sector"));
 		return static_cast<Sector*>(GetParent());
 	}
 

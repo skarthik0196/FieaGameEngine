@@ -16,6 +16,7 @@
 #include "JsonParseHelper.h"
 #include "JsonParseMaster.h"
 #include "JsonParseHelperTable.h"
+#include "TestEntity.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace FieaGameEngine;
@@ -28,6 +29,7 @@ namespace UnitTestLibraryDesktop
 		World ContrivedWorld;
 		Sector ContrivedSector;
 		Entity ContrivedEntity;
+		TestEntity ContrivedTestEntity;
 	public:
 		static _CrtMemState sStartMemState;
 		/// <summary>
@@ -59,7 +61,7 @@ namespace UnitTestLibraryDesktop
 
 		TEST_METHOD(Initialization)
 		{
-			CreateConcreteFactory(Entity, RTTI)
+			CreateConcreteFactory(Entity, Entity)
 
 			World W1("W1");
 			Assert::AreEqual(std::string("W1"), W1.GetName());
@@ -71,12 +73,12 @@ namespace UnitTestLibraryDesktop
 			Entity* E1 = S1->CreateEntity("Entity", "E1");
 			Assert::AreEqual(std::string("E1"), E1->GetName());
 
-			AbstractFactory<RTTI>::ClearFactories();
+			AbstractFactory<Entity>::ClearFactories();
 		}
 
 		TEST_METHOD(Update)
 		{
-			CreateConcreteFactory(Entity, RTTI)
+			CreateConcreteFactory(Entity, Entity)
 
 			World W1("World1");
 			Sector *S1 = W1.CreateSector("S1");
@@ -91,12 +93,12 @@ namespace UnitTestLibraryDesktop
 			
 			Assert::IsTrue(W1.GetWorldState().CurrentEntity == S2->GetEntities().Get<Scope*>(0));
 
-			AbstractFactory<RTTI>::ClearFactories();
+			AbstractFactory<Entity>::ClearFactories();
 		}
 
 		TEST_METHOD(GetName)
 		{
-			CreateConcreteFactory(Entity, RTTI)
+			CreateConcreteFactory(Entity, Entity)
 
 			World W1("W1");
 			Assert::AreEqual(std::string("W1"), W1.GetName());
@@ -108,12 +110,12 @@ namespace UnitTestLibraryDesktop
 			Entity* E1 = S1->CreateEntity("Entity", "E1");
 			Assert::AreEqual(std::string("E1"), E1->GetName());
 
-			AbstractFactory<RTTI>::ClearFactories();
+			AbstractFactory<Entity>::ClearFactories();
 		}
 
 		TEST_METHOD(GetSectorGetWorld)
 		{
-			CreateConcreteFactory(Entity, RTTI)
+			CreateConcreteFactory(Entity, Entity)
 
 			World W1("W1");
 			Assert::AreEqual(std::string("W1"), W1.GetName());
@@ -127,12 +129,12 @@ namespace UnitTestLibraryDesktop
 			Assert::AreEqual(std::string("E1"), E1->GetName());
 			Assert::IsTrue(E1->GetSector() == S1);
 
-			AbstractFactory<RTTI>::ClearFactories();
+			AbstractFactory<Entity>::ClearFactories();
 		}
 
 		TEST_METHOD(Entities)
 		{
-			CreateConcreteFactory(Entity, RTTI)
+			CreateConcreteFactory(Entity, Entity)
 
 			World W1("World1");
 			Sector *S1 = W1.CreateSector("S1");
@@ -145,12 +147,12 @@ namespace UnitTestLibraryDesktop
 			Assert::AreEqual(3U, Entities.Length());
 			Assert::IsTrue(Entities.Get<Scope*>(1) == E2);
 
-			AbstractFactory<RTTI>::ClearFactories();
+			AbstractFactory<Entity>::ClearFactories();
 		}
 
 		TEST_METHOD(Sectors)
 		{
-			CreateConcreteFactory(Entity, RTTI)
+			CreateConcreteFactory(Entity, Entity)
 
 			World W1("World1");
 			Sector *S1 = W1.CreateSector("S1");
@@ -163,31 +165,94 @@ namespace UnitTestLibraryDesktop
 			Assert::AreEqual(2U, Sectors.Length());
 			Assert::IsTrue(S1 == Sectors.Get<Scope*>(0));
 
-			AbstractFactory<RTTI>::ClearFactories();
+			AbstractFactory<Entity>::ClearFactories();
 		}
 
 		TEST_METHOD(Parsing)
 		{
-			CreateConcreteFactory(Entity, RTTI)
+			CreateConcreteFactory(Entity, Entity)
+			CreateConcreteFactory(TestEntity, Entity)
 
 			std::string FileName = "Scripts/EntityParseTest.json";
 
 			World W1;
-			Sector *S1 = W1.CreateSector("S1");
-			JsonParseHelperTable::TableSharedData SharedScope(*S1);
+			JsonParseHelperTable::TableSharedData SharedScope(W1);
 			JsonParseMaster Master1(SharedScope);
 
 			JsonParseHelperTable TableHelper;
 			Master1.AddHelper(TableHelper);
 			Master1.ParseFromFile(FileName);
+			
+			Assert::AreEqual((W1)["Weather"].Get<std::string>(0), std::string("Sunny"));
 
-			Assert::AreEqual((*S1)["Weather"].Get<std::string>(0), std::string("Sunny"));
-			Assert::AreEqual(1U, S1->GetEntities().Length());
-			Entity *E1 = (*S1)["Entities"].Get<Scope*>(0)->As<Entity>();
+			Assert::AreEqual(1U, W1.GetSectors().Length());
+			Sector *S1 = W1.GetSectors().Get<Scope*>(0)->As<Sector>();
+			Assert::AreEqual((*S1)["NPC's"].Get<int32_t>(0), 8);
+
+			Assert::AreEqual(2U, S1->GetEntities().Length());
+
+			Datum& Entities = S1->GetEntities();
+			Entity *E1, *E2;
+
+			if ((*Entities.Get<Scope*>(0))["Name"].Get<std::string>(0) == "CharacterStats")
+			{
+				E2 = (*S1)["Entities"].Get<Scope*>(0)->As<Entity>();
+				E1 = (*S1)["Entities"].Get<Scope*>(1)->As<Entity>();
+			}
+			else
+			{
+				E2 = (*S1)["Entities"].Get<Scope*>(1)->As<Entity>();
+				E1 = (*S1)["Entities"].Get<Scope*>(0)->As<Entity>();
+			}
+			
 			Assert::AreEqual((*E1)["Invisibility"].Get<int32_t>(0), 3);
 			Assert::AreEqual((*E1)["Dash"].Get<int32_t>(0), 3);
 
-			AbstractFactory<RTTI>::ClearFactories();
+			AbstractFactory<Entity>::ClearFactories();
+		}
+
+		TEST_METHOD(TimeTests)
+		{
+			World W1;
+			W1.SetName("W1");
+			W1.Update();
+			GameClock& GC = W1.GetWorldState().GetGameClock();
+			W1.Update();
+			GameTime& GT = W1.GetWorldState().GetGameTime();
+
+			GT.SetElapsedGameTime(std::chrono::milliseconds(100));
+			GT.SetTotalGameTime(std::chrono::milliseconds(100));
+			Assert::IsTrue(GT.ElapsedGameTime() == GT.TotalGameTime());
+			Assert::IsTrue(GT.ElapsedGameTimeSeconds() == GT.TotalGameTimeSeconds());
+			GC.CurrentTime();
+			GC.LastTime();
+			GC.StartTime();
+		}
+		TEST_METHOD(CopySemantics)
+		{
+			CreateConcreteFactory(Entity, Entity)
+
+			World W1;
+			World W2(W1);
+			World W3;
+			W3 = W2;
+
+			Sector *S1 = new Sector(*(W1.CreateSector("S1")));
+			Sector *S2 = new Sector();
+			*S2 = *S1;
+			Assert::IsTrue(S2->GetName() == S1->GetName());
+
+			Entity *E1 = new Entity(*(S1->CreateEntity("Entity", "E1")));
+			Entity *E2 = new Entity();
+			*E2 = *E1;
+			Assert::IsTrue(E1->GetName() == E2->GetName());
+
+			delete S1;
+			delete S2;
+			delete E1;
+			delete E2;
+
+			AbstractFactory<Entity>::ClearFactories();
 		}
 	};
 	_CrtMemState EntitySectorWorldTests::sStartMemState;

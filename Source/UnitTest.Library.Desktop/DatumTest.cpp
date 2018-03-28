@@ -1223,8 +1223,8 @@ namespace UnitTestLibraryDesktop
 			Expression = [&exd1, &f]() {exd1.Remove(&f); };
 			Assert::ExpectException<std::exception>(Expression);
 
-			Expression = [&exd1]() {exd1.Resize(4); };
-			Assert::ExpectException<std::exception>(Expression);
+			/*Expression = [&exd1]() {exd1.Resize(4); };
+			Assert::ExpectException<std::exception>(Expression);*/
 
 			Expression = [&exd1]() {exd1.PushBack(4); };
 			Assert::ExpectException<std::exception>(Expression);
