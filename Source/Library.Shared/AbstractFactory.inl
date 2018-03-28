@@ -15,6 +15,15 @@ namespace FieaGameEngine
 	}
 
 	template<typename T>
+	void AbstractFactory<T>::RemoveAndDeleteFactory(const std::string& FactoryName)
+	{
+		AbstractFactory<T> *result = Find(FactoryName);
+		ConcreteFactories.Remove(FactoryName);
+		delete result;
+
+	}
+
+	template<typename T>
 	typename HashMap<std::string, AbstractFactory<T>*>::Iterator AbstractFactory<T>::begin()
 	{
 		return ConcreteFactories.begin();

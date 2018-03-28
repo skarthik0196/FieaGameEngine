@@ -48,6 +48,10 @@ namespace FieaGameEngine
 		/// <returns>A GameTime refernece</returns>
 		GameTime& GetGameTime();
 
+		/// <summary>
+		/// Get Game Clock
+		/// </summary>
+		/// <returns>A GameClock reference</returns>
 		GameClock& GetGameClock();
 
 	private:

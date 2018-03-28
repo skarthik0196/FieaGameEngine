@@ -73,6 +73,11 @@ namespace UnitTestLibraryDesktop
 			Entity* E1 = S1->CreateEntity("Entity", "E1");
 			Assert::AreEqual(std::string("E1"), E1->GetName());
 
+			Entity E2("E2");
+			Assert::AreEqual(std::string("E2"), E2.GetName());
+			Sector S2("S2");
+			Assert::AreEqual(std::string("S2"), S2.GetName());
+
 			AbstractFactory<Entity>::ClearFactories();
 		}
 
@@ -224,6 +229,7 @@ namespace UnitTestLibraryDesktop
 			GT.SetTotalGameTime(std::chrono::milliseconds(100));
 			Assert::IsTrue(GT.ElapsedGameTime() == GT.TotalGameTime());
 			Assert::IsTrue(GT.ElapsedGameTimeSeconds() == GT.TotalGameTimeSeconds());
+			GT.CurrentTime();
 			GC.CurrentTime();
 			GC.LastTime();
 			GC.StartTime();
@@ -253,6 +259,40 @@ namespace UnitTestLibraryDesktop
 			delete E2;
 
 			AbstractFactory<Entity>::ClearFactories();
+		}
+
+		TEST_METHOD(MoveSemantics)
+		{
+			CreateConcreteFactory(Entity, Entity)
+
+			World W1("W1");
+			World W2(std::move(W1));
+			Assert::AreEqual(W2.GetName(), std::string("W1"));
+			World W3;
+			W3 = std::move(W2);
+			Assert::AreEqual(W3.GetName(), std::string("W1"));
+
+			Sector *S1 = W3.CreateSector("S1");
+			Sector *S2= new Sector(std::move(*S1));
+			Assert::AreEqual(std::string("S1"), S2->GetName());
+			Sector *S3 = new Sector();
+			*S3 = std::move(*S2);
+			Assert::AreEqual(std::string("S1"), S3->GetName());
+
+			Entity *E1 = S3->CreateEntity("Entity", "E1");
+			Entity *E2 = new Entity(std::move(*E1));
+			Assert::AreEqual(std::string("E1"), E2->GetName());
+			Entity *E3 = new Entity();
+			*E3 = std::move(*E2);
+			Assert::AreEqual(std::string("E1"), E3->GetName());
+
+			delete S1;
+			delete S2;
+			delete E1;
+			delete E2;
+
+			AbstractFactory<Entity>::ClearFactories();
+			
 		}
 	};
 	_CrtMemState EntitySectorWorldTests::sStartMemState;

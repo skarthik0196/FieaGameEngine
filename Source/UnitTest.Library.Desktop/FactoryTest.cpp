@@ -140,8 +140,11 @@ namespace UnitTestLibraryDesktop
 			AbstractFactory<RTTI>* A = AbstractFactory<RTTI>::Find("Scope");
 			AbstractFactory<RTTI>::RemoveFactory(*A);
 
-			delete A;
-			AbstractFactory<RTTI>::ClearFactories();
+			AbstractFactory<RTTI>::AddFactory("Scope", *A);
+			AbstractFactory<RTTI>::RemoveAndDeleteFactory("Scope");
+			AbstractFactory<RTTI>::RemoveAndDeleteFactory("Foo");
+
+			//AbstractFactory<RTTI>::ClearFactories();
 		}
 	};
 	_CrtMemState FactoryTests::sStartMemState;

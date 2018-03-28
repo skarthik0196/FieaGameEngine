@@ -60,6 +60,7 @@ namespace FieaGameEngine
 		/// <param name="concreteFactory">A reference to a Concrete Factory</param>
 		static void RemoveFactory(AbstractFactory& concreteFactory);
 
+		static void RemoveAndDeleteFactory(const std::string& FactoryName);
 		/// <summary>
 		/// Returns an Iterator to the beginning of the Factory List
 		/// </summary>
