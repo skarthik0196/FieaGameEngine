@@ -6,6 +6,7 @@ namespace FieaGameEngine
 {
 	class Sector;
 	class World;
+	class Action;
 
 	/// <summary>
 	/// Entity class derived from Attributed
@@ -86,6 +87,10 @@ namespace FieaGameEngine
 		/// </summary>
 		/// <param name="sector">A sector&</param>
 		void SetSector(Sector& sector);
+
+		Datum& GetActions();
+
+		Action* CreateAction(const std::string& actionClassName, const std::string& actionInstanceName);
 
 	private:
 		void InitializeSignatures();

@@ -7,6 +7,7 @@ namespace FieaGameEngine
 	class World;
 	class Sector;
 	class Entity;
+	class Action;
 
 	/// <summary>
 	/// The World State class that holds pointers to all the current objects being processed
@@ -30,6 +31,7 @@ namespace FieaGameEngine
 		World* CurrentWorld{ nullptr };
 		Sector* CurrentSector{ nullptr };
 		Entity* CurrentEntity{ nullptr };
+		Action* CurrentAction{ nullptr };
 
 		/// <summary>
 		/// Update Method to update GameTime

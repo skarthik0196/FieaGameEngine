@@ -2,6 +2,9 @@
 #include "Entity.h"
 #include "Sector.h"
 #include "World.h"
+#include "Action.h"
+#include "AbstractFactory.h"
+#include "ConcreteFactory.h"
 #include <cassert>
 
 namespace FieaGameEngine
@@ -68,6 +71,13 @@ namespace FieaGameEngine
 	void Entity::Update(WorldState& worldState)
 	{
 		worldState.CurrentEntity = this;
+
+		Datum& actions = GetActions();
+		for (uint32_t i = 0; i < actions.Length(); ++i)
+		{
+			assert(actions.Get<Scope*>(i)->Is(Action::TypeIdClass()));
+			static_cast<Action*>(actions.Get<Scope*>(i))->Update(worldState);
+		}
 	}
 
 	Sector* Entity::GetSector()
@@ -81,9 +91,25 @@ namespace FieaGameEngine
 		sector.Adopt(*this, "Entities");
 	}
 
+	Datum& Entity::GetActions()
+	{
+		return (*this)["Entites"];
+	}
+
+	Action* Entity::CreateAction(const std::string& actionClassName, const std::string& actionInstanceName)
+	{
+		Action* newAction = AbstractFactory<Action>::Create(actionClassName);
+
+		newAction->SetName(actionInstanceName);
+		newAction->SetEntity(*this);
+
+		return newAction;
+	}
+
 	void Entity::InitializeSignatures()
 	{
 		AddExternalAttribute("Name", &Name, 1);
+		AddNestedScope("Actions");
 	}
 
 	void Entity::UpdateExternalStorage()
