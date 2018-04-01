@@ -5,6 +5,8 @@
 
 namespace FieaGameEngine
 {
+	RTTI_DEFINITIONS(Action)
+
 	Action::Action(): Attributed()
 	{
 		InitializeSignatures();

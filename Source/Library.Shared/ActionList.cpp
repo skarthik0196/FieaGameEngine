@@ -1,9 +1,18 @@
 #include "pch.h"
 #include "ActionList.h"
+#include "AbstractFactory.h"
+#include "ConcreteFactory.h"
 
 namespace FieaGameEngine
 {
+	RTTI_DEFINITIONS(ActionList)
+
 	ActionList::ActionList()
+	{
+		ActionList::InitializeSignatures();
+	}
+
+	ActionList::ActionList(const std::string & name) : Action(name)
 	{
 		ActionList::InitializeSignatures();
 	}
@@ -40,6 +49,21 @@ namespace FieaGameEngine
 	{
 		return (*this)["Actions"];
 	}
+
+	Action* ActionList::CreateAction(const std::string& className, const std::string& instanceName)
+	{
+		Action* newAction = AbstractFactory<Action>::Create(className);
+		newAction->SetName(instanceName);
+		AppendAction(*newAction);
+
+		return newAction;
+	}
+
+	void ActionList::AppendAction(Action& action)
+	{
+		Adopt(action, "Actions");
+	}
+
 	void ActionList::Update(WorldState& worldState)
 	{
 		worldState.CurrentAction = this;

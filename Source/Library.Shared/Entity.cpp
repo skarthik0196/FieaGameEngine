@@ -93,7 +93,7 @@ namespace FieaGameEngine
 
 	Datum& Entity::GetActions()
 	{
-		return (*this)["Entites"];
+		return (*this)["Actions"];
 	}
 
 	Action* Entity::CreateAction(const std::string& actionClassName, const std::string& actionInstanceName)

@@ -8,6 +8,8 @@ namespace FieaGameEngine
 
 	class Action : public Attributed
 	{
+		RTTI_DECLARATIONS(Action, Attributed)
+
 	public:
 		Action();
 		Action(const std::string& name);
