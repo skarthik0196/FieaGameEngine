@@ -17,6 +17,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Library.Desktop\targetver.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)AbstractFactory.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Action.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ActionCreateAction.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ActionExpression.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ActionList.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ActionListIf.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Attributed.h" />
@@ -52,6 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Action.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ActionCreateAction.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ActionExpression.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)ActionList.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)ActionListIf.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Entity.cpp" />
