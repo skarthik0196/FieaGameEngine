@@ -23,6 +23,9 @@
 #include "TestAction.h"
 #include "JsonParseHelperAction.h"
 #include "ActionExpression.h"
+#include "ActionDestroyAction.h"
+#include "Graveyard.h"
+#include "ActionCreateAction.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace FieaGameEngine;
@@ -40,6 +43,8 @@ namespace UnitTestLibraryDesktop
 		ActionList List1;
 		ActionListIf If1;
 		ActionExpression XX;
+		ActionDestroyAction ContrivedDestroyAction;
+		ActionCreateAction ContrivedCreateAction;
 	public:
 		static _CrtMemState sStartMemState;
 		/// <summary>
@@ -147,7 +152,7 @@ namespace UnitTestLibraryDesktop
 			AbstractFactory<Action>::ClearFactories();
 		}
 
-		TEST_METHOD(ParseIf)
+		TEST_METHOD(ParseActionsFromFile)
 		{
 			CreateConcreteFactory(ActionList, Action);
 			CreateConcreteFactory(ActionListIf, Action);
@@ -176,9 +181,24 @@ namespace UnitTestLibraryDesktop
 
 			Master1.ParseFromFile("Scripts/ActionParseTest.json"s);
 
-			//W1.Update();
+			W1.Update();
 
-			//Assert::AreEqual("EE"s, E1->GetName());
+			Assert::AreEqual("EE"s, E1->GetName());
+			Assert::AreEqual(2U, E1->GetActions().Length());
+
+			W1.Update();
+
+			ActionList *AList1 = E1->GetActions().Get<Scope*>(0)->As<ActionList>();
+			Action *ActionIf = E1->GetActions().Get<Scope*>(1)->As<ActionList>();
+
+			if (AList1 != nullptr)
+			{
+				Assert::AreEqual(1U, AList1->GetActions().Length());
+				ActionExpression *Expr1 = AList1->GetActions().Get<Scope*>()->As<ActionExpression>();
+				Assert::AreEqual(10.0f, (*Expr1)["Result"].Get<float>(0));
+
+				Assert::AreEqual(0, (*ActionIf)["ConditionValue"].Get<int32_t>(0));
+			}
 
 			AbstractFactory<Entity>::ClearFactories();
 			AbstractFactory<Action>::ClearFactories();
@@ -190,14 +210,88 @@ namespace UnitTestLibraryDesktop
 
 			WorldState worldState;
 			ActionExpression Exp1("Exp1"s);
+
 			Exp1.SetRPN("15 7 1 1 + - / 3 * 2 1 1 + + -");
 
 			Exp1.Update(worldState);
 
 			Assert::AreEqual(5.0f, Exp1["Result"].Get<float>(0));
 
+			Exp1["Health"] = 100;
+			Assert::AreEqual(100, Exp1["Health"].Get<int32_t>(0));
+
+			Exp1.SetRPN("Health Health 10 - =");
+
+			Exp1.Update(worldState);
+
+			Assert::AreEqual(90.0f, Exp1["Result"].Get<float>(0));
+			Assert::AreEqual(90, Exp1["Health"].Get<int32_t>(0));
+
 			AbstractFactory<Action>::ClearFactories();
 		}
+
+		TEST_METHOD(ActionDeleteAction)
+		{
+			CreateConcreteFactory(ActionList, Action);
+			CreateConcreteFactory(TestAction, Action);
+			CreateConcreteFactory(Entity, Entity)
+			CreateConcreteFactory(ActionDestroyAction, Action)
+			CreateConcreteFactory(ActionListIf,Action)
+
+			World W1("W1");
+			Entity *E1 = W1.CreateSector("S1")->CreateEntity("Entity", "E1");
+			E1;
+			ActionList *AList1 = static_cast<ActionList*>(E1->CreateAction("ActionList", "AList1"));
+			Assert::AreEqual("AList1"s, AList1->GetName());
+
+			AList1->CreateAction("TestAction", "TestA1");
+			ActionDestroyAction *D1 = static_cast<ActionDestroyAction*>(AList1->CreateAction("ActionDestroyAction", "Destroy1"));
+			D1->SetActionInstanceName("TestA1"s);
+			Assert::AreEqual(2U, AList1->GetActions().Length());
+
+			W1.Update();
+
+			Assert::AreEqual(1U, GrimReaper::KillListSize());
+			
+			W1.Update();
+
+			Assert::AreEqual(0U, GrimReaper::KillListSize());
+			Assert::AreEqual(1U, AList1->GetActions().Length());
+
+			AbstractFactory<Entity>::ClearFactories();
+			AbstractFactory<Action>::ClearFactories();
+		}
+
+		TEST_METHOD(CreateActionClass)
+		{
+			CreateConcreteFactory(ActionList, Action);
+			CreateConcreteFactory(TestAction, Action);
+			CreateConcreteFactory(Entity, Entity)
+			CreateConcreteFactory(ActionCreateAction, Action)
+			CreateConcreteFactory(ActionListIf, Action)
+
+			World W1("W1");
+			Entity *E1 = W1.CreateSector("S1")->CreateEntity("Entity", "E1");
+			E1;
+			ActionList *AList1 = static_cast<ActionList*>(E1->CreateAction("ActionList", "AList1"));
+			Assert::AreEqual("AList1"s, AList1->GetName());
+
+			ActionCreateAction *D1 = static_cast<ActionCreateAction*>(AList1->CreateAction("ActionCreateAction", "Create1"));
+			D1->SetActionClassName("TestAction");
+			D1->SetActionInstanceName("Test1");
+
+			Assert::AreEqual(1U, AList1->GetActions().Length());
+
+			W1.Update();
+
+			Assert::AreEqual(2U, AList1->GetActions().Length());
+			Assert::AreEqual("EE"s, E1->GetName());
+
+			AbstractFactory<Entity>::ClearFactories();
+			AbstractFactory<Action>::ClearFactories();
+		}
+
+
 
 	};
 	_CrtMemState ActionTests::sStartMemState;

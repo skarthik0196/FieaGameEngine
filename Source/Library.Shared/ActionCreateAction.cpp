@@ -2,6 +2,8 @@
 #include "ActionCreateAction.h"
 #include "AbstractFactory.h"
 #include "ConcreteFactory.h"
+#include "Entity.h"
+#include "ActionList.h"
 
 namespace FieaGameEngine
 {
@@ -48,10 +50,43 @@ namespace FieaGameEngine
 		return *this;
 	}
 
-	//Need to Create Action and add to Container
-	void ActionCreateAction::Update()
+	void ActionCreateAction::SetActionClassName(const std::string& actionClassName)
 	{
-		GetParent()->Adopt(*AbstractFactory<Action>::Create(ActionClassName), ActionInstanceName);
+		ActionClassName = actionClassName;
+	}
+
+	void ActionCreateAction::SetActionInstanceName(const std::string& actionInstanceName)
+	{
+		ActionInstanceName = actionInstanceName;
+	}
+
+	const std::string & ActionCreateAction::GetActionClassName() const
+	{
+		return ActionClassName;
+	}
+
+	const std::string & ActionCreateAction::GetActionInstanceName() const
+	{
+		return ActionInstanceName;
+	}
+
+	void ActionCreateAction::Update(WorldState& worldState)
+	{
+		worldState.CurrentAction = this;
+
+		Entity *entityParent = GetParent()->As<Entity>();
+		if (entityParent != nullptr)
+		{
+			entityParent->CreateAction(ActionClassName, ActionInstanceName);
+		}
+		else
+		{
+			ActionList *aListParent = GetParent()->As<ActionList>();
+			if (aListParent != nullptr)
+			{
+				aListParent->CreateAction(ActionClassName, ActionInstanceName);
+			}
+		}
 	}
 
 	void ActionCreateAction::InitializeSignatures()

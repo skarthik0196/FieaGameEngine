@@ -14,12 +14,35 @@ namespace FieaGameEngine
 		public:
 			friend class JsonParseHelperAction;
 
+			/// <summary>
+			/// Explicit Constructor that takes in an Entity reference
+			/// </summary>
+			/// <param name="entity"></param>
 			explicit EntitySharedData(Entity& entity);
+
 			~EntitySharedData() = default;
 
+			/// <summary>
+			/// Initialize the SharedData
+			/// </summary>
 			void Initialize();
+
+			/// <summary>
+			/// Clone the SharedData
+			/// </summary>
+			/// <returns></returns>
 			SharedData* Clone();
+
+			/// <summary>
+			/// Set the SharedEntity
+			/// </summary>
+			/// <param name="entity"></param>
 			void SetSharedEntity(Entity& entity);
+
+			/// <summary>
+			/// Get the SharedEntity
+			/// </summary>
+			/// <returns></returns>
 			Entity* GetSharedEntity();
 
 		private:
@@ -40,7 +63,7 @@ namespace FieaGameEngine
 		/// <param name="sharedData">A reference to the SharedData to be used while parsing</param>
 		/// <param name="name">The current key</param>
 		/// <param name="values">The JsonValue associated with that key</param>
-		/// <returns>A bool indicating whether the tablehandler can handle the passed SharedData</returns>
+		/// <returns>A bool indicating whether the ActionHandler can handle the passed SharedData</returns>
 		bool StartElementHandler(JsonParseMaster::SharedData& sharedData, std::string& name, Json::Value& values);
 
 		/// <summary>
@@ -49,14 +72,14 @@ namespace FieaGameEngine
 		/// <param name="sharedData">A reference to the SharedData to be used while parsing</param>
 		/// <param name="name">The current key</param>
 		/// <param name="values">The JsonValue associated with that key</param>
-		/// <returns>A bool indicating whether the tablehandler can handle the passed SharedData</returns>
+		/// <returns>A bool indicating whether the ActionHandler can handle the passed SharedData</returns>
 		bool ValueHandler(JsonParseMaster::SharedData& sharedData, std::string& name, Json::Value& values);
 
 		/// <summary>
 		/// End Element Handler
 		/// </summary>
 		/// <param name="sharedData">A reference to the SharedData to be used while parsing</param>
-		/// <returns>A bool indicating whether the table handler can handle the passed SharedData</returns>
+		/// <returns>A bool indicating whether the ActionHandler can handle the passed SharedData</returns>
 		bool EndElementHandler(JsonParseMaster::SharedData& sharedData);
 
 		/// <summary>
@@ -68,8 +91,9 @@ namespace FieaGameEngine
 	private:
 
 		void InnerActionParse(std::string& name, Json::Value& values, JsonParseHelperAction::EntitySharedData& customSharedData);
+		void InnerActionListParse(std::string& name, Json::Value& values, JsonParseHelperAction::EntitySharedData& customSharedData);
 		void InnerIfParse(std::string& name, Json::Value& values, JsonParseHelperAction::EntitySharedData& customSharedData);
-		void ExpressionParse(std::string& name, Json::Value& values, JsonParseHelperAction::EntitySharedData& customSharedData);
+		void EmptyFunction(std::string& name, Json::Value& values, JsonParseHelperAction::EntitySharedData& customSharedData);
 
 		void ConvertToRPN(std::string& expression);
 		bool IsOperator(const std::string& token);

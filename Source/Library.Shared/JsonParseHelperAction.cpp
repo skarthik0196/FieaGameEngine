@@ -44,11 +44,13 @@ namespace FieaGameEngine
 	bool JsonParseHelperAction::StartElementHandler(JsonParseMaster::SharedData& sharedData, std::string& name, Json::Value& values)
 	{
 
-		static void(JsonParseHelperAction::*InnerDataPointer[3])(std::string&, Json::Value&, JsonParseHelperAction::EntitySharedData&) = 
+		static void(JsonParseHelperAction::*InnerDataPointer[5])(std::string&, Json::Value&, JsonParseHelperAction::EntitySharedData&) = 
 		{
 		 &JsonParseHelperAction::InnerActionParse,
 		 &JsonParseHelperAction::InnerIfParse,
-		 &JsonParseHelperAction::ExpressionParse
+		 &JsonParseHelperAction::EmptyFunction,
+		 &JsonParseHelperAction::EmptyFunction,
+		 &JsonParseHelperAction::InnerActionListParse
 		};
 
 		bool result = false;
@@ -64,7 +66,6 @@ namespace FieaGameEngine
 			{
 				ElementStack.push(Element());
 				ElementStack.top().ElementSignature["Name"] = name;
-				//ParsingAction = ActionTypes::NA;
 			}
 
 		}
@@ -162,10 +163,32 @@ namespace FieaGameEngine
 		std::string instanceName = name.substr(0, splitPosition);
 		std::string className = name.substr(splitPosition + 2, std::string::npos);
 
-		ParsingAction = StringActionMap[className];
+		if (!StringActionMap.ContainsKey(className, ParsingAction))
+		{
+			ParsingAction = ActionTypes::None;
+		}
 		ActionTypeStack.push(ParsingAction);
 
 		customSharedData.CurrentAction = customSharedData.SharedEntity->CreateAction(className, instanceName);
+
+		values;
+	}
+
+	void JsonParseHelperAction::InnerActionListParse(std::string & name, Json::Value & values, JsonParseHelperAction::EntitySharedData & customSharedData)
+	{
+		auto splitPosition = name.find("__");
+		std::string instanceName = name.substr(0, splitPosition);
+		std::string className = name.substr(splitPosition + 2, std::string::npos);
+
+		if (!StringActionMap.ContainsKey(className, ParsingAction))
+		{
+			ParsingAction = ActionTypes::None;
+		}
+		ActionTypeStack.push(ParsingAction);
+
+		ActionList *currentActionList = static_cast<ActionList*>(customSharedData.CurrentAction);
+
+		customSharedData.CurrentAction = currentActionList->CreateAction(className, instanceName);
 
 		values;
 	}
@@ -183,23 +206,42 @@ namespace FieaGameEngine
 			static_cast<ActionListIf*>(customSharedData.CurrentAction)->SetIfBlock(*thenAction);
 
 			customSharedData.CurrentAction = thenAction;
-			ParsingAction = StringActionMap[className];
+			if (!StringActionMap.ContainsKey(className, ParsingAction))
+			{
+				ParsingAction = ActionTypes::None;
+			}
 			ActionTypeStack.push(ParsingAction);
 		}
-		else
+		else if(block == "else")
 		{
 			Action* elseAction = AbstractFactory<Action>::Create(className);
 			assert(customSharedData.CurrentAction->Is("ActionListIf"));
 			static_cast<ActionListIf*>(customSharedData.CurrentAction)->SetElseBlock(*elseAction);
 
 			customSharedData.CurrentAction = elseAction;
-			ParsingAction = StringActionMap[className];
+			if (!StringActionMap.ContainsKey(className, ParsingAction))
+			{
+				ParsingAction = ActionTypes::None;
+			}
+			ActionTypeStack.push(ParsingAction);
+		}
+		else
+		{
+			Action* evaluationAction = AbstractFactory<Action>::Create(className);
+			assert(customSharedData.CurrentAction->Is("ActionListIf"));
+			static_cast<ActionListIf*>(customSharedData.CurrentAction)->SetEvaluationBlock(*evaluationAction);
+
+			customSharedData.CurrentAction = evaluationAction;
+			if (!StringActionMap.ContainsKey(className, ParsingAction))
+			{
+				ParsingAction = ActionTypes::None;
+			}
 			ActionTypeStack.push(ParsingAction);
 		}
 
 	}
 
-	void JsonParseHelperAction::ExpressionParse(std::string& name, Json::Value& values, JsonParseHelperAction::EntitySharedData& customSharedData)
+	void JsonParseHelperAction::EmptyFunction(std::string& name, Json::Value& values, JsonParseHelperAction::EntitySharedData& customSharedData)
 	{
 		UNREFERENCED_PARAMETER(name);
 		UNREFERENCED_PARAMETER(values);
@@ -256,7 +298,7 @@ namespace FieaGameEngine
 
 	bool JsonParseHelperAction::IsOperator(const std::string& token)
 	{
-		std::vector<std::string> OperatorList = { "+", "-" , "*", "/", "(", ")", "!" };
+		std::vector<std::string> OperatorList = { "+", "-" , "*", "/", "(", ")", "!", "=" };
 
 		return (std::find(std::begin(OperatorList), std::end(OperatorList), token) != std::end(OperatorList));
 	}
@@ -342,19 +384,21 @@ namespace FieaGameEngine
 	HashMap<std::string, JsonParseHelperAction::ActionTypes> JsonParseHelperAction::StringActionMap = { 
 																									{"ActionListIf", JsonParseHelperAction::ActionTypes::ActionListIf}, 
 																									{"ActionExpression", JsonParseHelperAction::ActionTypes::ActionExpression},
-																									{"TestAction",  JsonParseHelperAction::ActionTypes::TestAction}
+																									{"TestAction",  JsonParseHelperAction::ActionTypes::TestAction},
+																									{"ActionList", JsonParseHelperAction::ActionTypes::ActionList}
 																									};
 
 	HashMap<std::string, Datum::DatumType> JsonParseHelperAction::StringTypeMap = { { "Integer", Datum::DatumType::Integer },{ "Float", Datum::DatumType::Float },{ "String", Datum::DatumType::String },{ "Vector4", Datum::DatumType::Vector4 },{ "Matrix4x4", Datum::DatumType::Matrix4x4 } };
 
 	HashMap<std::string, uint32_t> JsonParseHelperAction::OperatorWeightMap ={
-													{ "+",1U },
-													{ "-",1U },
-													{ "*",2U },
-													{ "/",2U },
-													{ "%",2U },
-													{ "!",3U },
+													{ "+",2U },
+													{ "-",2U },
+													{ "*",3U },
+													{ "/",3U },
+													{ "%",3U },
+													{ "!",4U },
 													{ "(",0U },
-													{ ")",0U }
+													{ ")",0U },
+													{ "=",1U }
 													};
 }

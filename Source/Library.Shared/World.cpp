@@ -2,6 +2,7 @@
 #include "World.h"
 #include "Sector.h"
 #include "Entity.h"
+#include "Graveyard.h"
 #include<cassert>
 
 namespace FieaGameEngine
@@ -69,6 +70,8 @@ namespace FieaGameEngine
 	{
 		CurrentWorldState.CurrentWorld = this;
 		CurrentWorldState.Update();
+
+		GrimReaper::KillAll();
 
 		Datum& sectorList = (*this)["Sectors"];
 		for (uint32_t i = 0; i < sectorList.Length(); ++i)

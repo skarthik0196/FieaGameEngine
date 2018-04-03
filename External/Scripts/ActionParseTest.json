@@ -1,32 +1,44 @@
 {
-  "If1__ActionListIf": {
-    "Condition": {
-      "type": "Integer",
-      "size": 1,
-      "value": 1
+  "If1__ActionListIf": 
+  {
+    "Evaluation__ActionExpression": 
+    {
+      "RPN__ActionExpression": 
+      {
+        "type": "String",
+        "size": 1,
+        "value": "ConditionValue = 1 - 1"
+      }
     },
-    "then__TestAction": {
-      "TestAction1": {
+    "then__TestAction": 
+    {
+      "TestAction1": 
+      {
         "type": "Integer",
         "size": 1,
         "value": 1
       }
     },
-    "else__TestAction": {
-      "TestAction2": {
+    "else__TestAction": 
+    {
+      "TestAction2": 
+      {
         "type": "Integer",
         "size": 1,
         "value": 1
       }
     }
   },
-  "Expr1__ActionExpression": 
+  "AList1__ActionList": 
   {
-    "RPN__ActionExpression": 
+    "Expr1__ActionExpression": 
     {
-      "type": "String",
-      "size": 1,
-      "value": "5 * ( 1 + 1 )"
+      "RPN__ActionExpression": 
+      {
+        "type": "String",
+        "size": 1,
+        "value": "5 * ( 1 + 1 )"
+      }
     }
   }
   }

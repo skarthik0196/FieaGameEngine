@@ -90,6 +90,13 @@ namespace FieaGameEngine
 	{
 		worldState.CurrentAction = this;
 
+		Datum& datum = (*this)["Evaluation"];
+
+		if (datum.Length() > 0)
+		{
+			static_cast<Action*>(&(datum[0]))->Update(worldState);
+		}
+
 		if (ConditionValue == 1)
 		{
 			static_cast<Action*>(&(*this)["ThenBlock"][0])->Update(worldState);
@@ -100,11 +107,25 @@ namespace FieaGameEngine
 		}
 	}
 
+	void ActionListIf::SetEvaluationBlock(Action & evaluationAction)
+	{
+		Datum& evaluationBlock = (*this)["Evaluation"];
+		if (evaluationBlock.Length() == 0)
+		{
+			Adopt(evaluationAction, "Evaluation");
+		}
+		else
+		{
+			evaluationBlock.Set(&evaluationAction, 0);
+		}
+	}
+
 	void ActionListIf::InitializeSignatures()
 	{
 		AddExternalAttribute("ConditionValue", &ConditionValue, 1);
 		AddNestedScope("ThenBlock");
 		AddNestedScope("ElseBlock");
+		AddNestedScope("Evaluation");
 	}
 	void ActionListIf::UpdateExternalStorage()
 	{
