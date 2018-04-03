@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "pch.h"
 #include "CppUnitTest.h"
 #define  _CRTDBG_MAP_ALLOC
@@ -21,6 +21,8 @@
 #include "ActionList.h"
 #include "ActionListIf.h"
 #include "TestAction.h"
+#include "JsonParseHelperAction.h"
+#include "ActionExpression.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace FieaGameEngine;
@@ -37,6 +39,7 @@ namespace UnitTestLibraryDesktop
 		TestEntity ContrivedTestEntity;
 		ActionList List1;
 		ActionListIf If1;
+		ActionExpression XX;
 	public:
 		static _CrtMemState sStartMemState;
 		/// <summary>
@@ -142,6 +145,53 @@ namespace UnitTestLibraryDesktop
 
 			AbstractFactory<Entity>::ClearFactories();
 			AbstractFactory<Action>::ClearFactories();
+		}
+
+		TEST_METHOD(ParseIf)
+		{
+			CreateConcreteFactory(ActionList, Action);
+			CreateConcreteFactory(ActionListIf, Action);
+			CreateConcreteFactory(Entity, Entity)
+			CreateConcreteFactory(TestEntity, Entity)
+			CreateConcreteFactory(TestAction, Action);
+
+			std::string FileName = "Scripts/EntityParseTest.json"s;
+
+			World W1;
+			JsonParseHelperTable::TableSharedData SharedScope(W1);
+			JsonParseMaster Master1(SharedScope);
+
+			JsonParseHelperTable TableHelper;
+			Master1.AddHelper(TableHelper);
+			Master1.ParseFromFile(FileName);
+
+			Sector *S1 = W1.GetSectors().Get<Scope*>()->As<Sector>();
+			Entity *E1 = S1->GetEntities().Get<Scope*>()->As<Entity>();
+
+			JsonParseHelperAction ActionHelper;
+			JsonParseHelperAction::EntitySharedData SharedEntity(*E1);
+			Master1.SetSharedData(SharedEntity);
+			Master1.AddHelper(ActionHelper);
+
+			Master1.ParseFromFile("Scripts/ActionParseTest.json"s);
+
+			W1.Update();
+
+			Assert::AreEqual("EE"s, E1->GetName());
+
+			AbstractFactory<Entity>::ClearFactories();
+			AbstractFactory<Action>::ClearFactories();
+		}
+
+		TEST_METHOD(RPNEvaluationCheck)
+		{
+			WorldState worldState;
+			ActionExpression Exp1("Exp1"s);
+			Exp1.SetRPN("15 7 1 1 + - / 3 * 2 1 1 + + -");
+
+			Exp1.Update(worldState);
+
+			Assert::AreEqual(5.0f, Exp1["Result"].Get<float>(0));
 		}
 
 	};

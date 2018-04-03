@@ -29,6 +29,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)GameTime.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)HashMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)JsonParseHelper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)JsonParseHelperAction.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)JsonParseHelperTable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)JsonParseMaster.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)json\json-forwards.h" />
@@ -61,6 +62,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Entity.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)GameClock.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)GameTime.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)JsonParseHelperAction.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Sector.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)World.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)WorldState.cpp" />

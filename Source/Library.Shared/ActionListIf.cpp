@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ActionListIf.h"
 
+
 namespace FieaGameEngine
 {
 	RTTI_DEFINITIONS(ActionListIf)
@@ -60,14 +61,16 @@ namespace FieaGameEngine
 	void ActionListIf::SetIfBlock(Action& ifAction)
 	{
 		Datum& ifBlock = (*this)["ThenBlock"];
+		
 		if (ifBlock.Length() == 0)
 		{
-			ifBlock.PushBack(&ifAction);
+			Adopt(ifAction, "ThenBlock");
 		}
 		else
 		{
 			ifBlock.Set(&ifAction, 0);
 		}
+		
 	}
 
 	void ActionListIf::SetElseBlock(Action& elseAction)
@@ -75,7 +78,7 @@ namespace FieaGameEngine
 		Datum& elseBlock = (*this)["ElseBlock"];
 		if (elseBlock.Length() == 0)
 		{
-			elseBlock.PushBack(&elseAction);
+			Adopt(elseAction, "ElseBlock");
 		}
 		else
 		{

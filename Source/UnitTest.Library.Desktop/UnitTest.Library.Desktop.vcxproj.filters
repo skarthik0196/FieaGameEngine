@@ -37,6 +37,9 @@
     <None Include="..\..\External\Scripts\EntityParseTest.json">
       <Filter>Scripts</Filter>
     </None>
+    <None Include="..\..\External\Scripts\ActionParseTest.json">
+      <Filter>Scripts</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Scripts">
