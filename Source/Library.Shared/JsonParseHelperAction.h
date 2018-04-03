@@ -69,6 +69,11 @@ namespace FieaGameEngine
 
 		void InnerActionParse(std::string& name, Json::Value& values, JsonParseHelperAction::EntitySharedData& customSharedData);
 		void InnerIfParse(std::string& name, Json::Value& values, JsonParseHelperAction::EntitySharedData& customSharedData);
+		void ExpressionParse(std::string& name, Json::Value& values, JsonParseHelperAction::EntitySharedData& customSharedData);
+
+		void ConvertToRPN(std::string& expression);
+		bool IsOperator(const std::string& token);
+		bool IsHigherOrSamePriority(std::string& newOperator, std::string& stackTop);
 
 		void AddIntData(Json::Value& value, Datum& datum);
 		void AddFloatData(Json::Value& value, Datum& datum);
@@ -81,6 +86,7 @@ namespace FieaGameEngine
 			ActionListIf,
 			ActionExpression,
 			TestAction,
+			ActionList,
 			NA,
 		};
 
@@ -96,6 +102,7 @@ namespace FieaGameEngine
 		ActionTypes ParsingAction{ActionTypes::None};
 		static HashMap<std::string, Datum::DatumType> StringTypeMap;
 		static HashMap<std::string, ActionTypes> StringActionMap;
+		static HashMap<std::string, uint32_t> OperatorWeightMap;
 	};
 }
 

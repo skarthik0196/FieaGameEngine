@@ -44,7 +44,12 @@ namespace FieaGameEngine
 	bool JsonParseHelperAction::StartElementHandler(JsonParseMaster::SharedData& sharedData, std::string& name, Json::Value& values)
 	{
 
-		static void(JsonParseHelperAction::*InnerDataPointer[3])(std::string&, Json::Value&, JsonParseHelperAction::EntitySharedData&) = {&JsonParseHelperAction::InnerActionParse, &JsonParseHelperAction::InnerIfParse, nullptr};
+		static void(JsonParseHelperAction::*InnerDataPointer[3])(std::string&, Json::Value&, JsonParseHelperAction::EntitySharedData&) = 
+		{
+		 &JsonParseHelperAction::InnerActionParse,
+		 &JsonParseHelperAction::InnerIfParse,
+		 &JsonParseHelperAction::ExpressionParse
+		};
 
 		bool result = false;
 		EntitySharedData *CustomSharedData = sharedData.As <EntitySharedData>();
@@ -89,15 +94,35 @@ namespace FieaGameEngine
 			result = true;
 			if (ElementStack.size() > 0)
 			{
+				bool isExpression = false;
 				Element& currentElement = ElementStack.top();
-				Datum& datum = CustomSharedData->CurrentAction->Append(currentElement.ElementSignature["Name"].asString());
+				std::string elementName = currentElement.ElementSignature["Name"].asString();
+				
+				auto exprPosition = elementName.find("__ActionExpression");
+
+				if (exprPosition != std::string::npos)
+				{
+					elementName = elementName.substr(0, exprPosition);
+					isExpression = true;
+				}
+
+				Datum& datum = CustomSharedData->CurrentAction->Append(elementName);
 				datum.SetType(StringTypeMap[currentElement.ElementSignature["type"].asString()]);
 
 				datum.Resize(ElementStack.top().ElementSignature["size"].asUInt());
 
 				Json::Value& currentValue = currentElement.ElementSignature["value"];
 
-				(this->*AddDataPointer[static_cast<int32_t>(datum.GetType())])(currentValue, datum);
+				if (isExpression == true)
+				{
+					std::string RPNExpression = currentValue.asString();
+					ConvertToRPN(RPNExpression);
+					datum.Set(RPNExpression, 0);
+				}
+				else
+				{
+					(this->*AddDataPointer[static_cast<int32_t>(datum.GetType())])(currentValue, datum);
+				}
 				ElementStack.pop();
 			}
 			else
@@ -127,7 +152,8 @@ namespace FieaGameEngine
 
 	JsonParseHelper * JsonParseHelperAction::Clone()
 	{
-		return nullptr;
+		JsonParseHelper* clonedHelper = new JsonParseHelperAction();
+		return clonedHelper;
 	}
 
 	void JsonParseHelperAction::InnerActionParse(std::string& name, Json::Value& values, JsonParseHelperAction::EntitySharedData& customSharedData)
@@ -173,6 +199,75 @@ namespace FieaGameEngine
 
 	}
 
+	void JsonParseHelperAction::ExpressionParse(std::string& name, Json::Value& values, JsonParseHelperAction::EntitySharedData& customSharedData)
+	{
+		UNREFERENCED_PARAMETER(name);
+		UNREFERENCED_PARAMETER(values);
+		UNREFERENCED_PARAMETER(customSharedData);
+	}
+
+	void JsonParseHelperAction::ConvertToRPN(std::string& expression)
+	{
+		std::stack<std::string> operatorStack;
+		operatorStack.push("(");
+		std::string Expression = expression;
+		Expression += " )";
+
+		std::stringstream InfixStream(Expression);
+		std::string token;
+		std::string RPN = "";
+
+		while (InfixStream >> token)
+		{
+			if (IsOperator(token) == true)
+			{
+				if (token == "(")
+				{
+					operatorStack.push(token);
+				}
+				else if (token == ")")
+				{
+					while (operatorStack.top() != "(")
+					{
+						std::string topOperator = operatorStack.top();
+						RPN += topOperator + " ";
+						operatorStack.pop();
+					}
+					operatorStack.pop();
+				}
+				else
+				{
+					while (IsHigherOrSamePriority(token, operatorStack.top()))
+					{
+						RPN += operatorStack.top() + " ";
+						operatorStack.pop();
+					}
+					operatorStack.push(token);
+				}
+			}
+			else
+			{
+				RPN += token + " ";
+			}
+		}
+
+		expression = RPN;
+	}
+
+	bool JsonParseHelperAction::IsOperator(const std::string& token)
+	{
+		std::vector<std::string> OperatorList = { "+", "-" , "*", "/", "(", ")", "!" };
+
+		return (std::find(std::begin(OperatorList), std::end(OperatorList), token) != std::end(OperatorList));
+	}
+
+	bool JsonParseHelperAction::IsHigherOrSamePriority(std::string& newOperator, std::string& stackTop)
+	{
+		uint32_t newOperatorWeight = OperatorWeightMap[newOperator];
+		uint32_t stackTopWeight = OperatorWeightMap[stackTop];
+
+		return (stackTopWeight > newOperatorWeight);
+	}
 
 	void JsonParseHelperAction::AddIntData(Json::Value& currentValue, Datum& datum)
 	{
@@ -251,4 +346,15 @@ namespace FieaGameEngine
 																									};
 
 	HashMap<std::string, Datum::DatumType> JsonParseHelperAction::StringTypeMap = { { "Integer", Datum::DatumType::Integer },{ "Float", Datum::DatumType::Float },{ "String", Datum::DatumType::String },{ "Vector4", Datum::DatumType::Vector4 },{ "Matrix4x4", Datum::DatumType::Matrix4x4 } };
+
+	HashMap<std::string, uint32_t> JsonParseHelperAction::OperatorWeightMap ={
+													{ "+",1U },
+													{ "-",1U },
+													{ "*",2U },
+													{ "/",2U },
+													{ "%",2U },
+													{ "!",3U },
+													{ "(",0U },
+													{ ")",0U }
+													};
 }

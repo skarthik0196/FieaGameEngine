@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "ActionCreateAction.h"
+#include "AbstractFactory.h"
+#include "ConcreteFactory.h"
 
 namespace FieaGameEngine
 {
@@ -49,7 +51,7 @@ namespace FieaGameEngine
 	//Need to Create Action and add to Container
 	void ActionCreateAction::Update()
 	{
-
+		GetParent()->Adopt(*AbstractFactory<Action>::Create(ActionClassName), ActionInstanceName);
 	}
 
 	void ActionCreateAction::InitializeSignatures()

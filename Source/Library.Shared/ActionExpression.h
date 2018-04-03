@@ -40,6 +40,7 @@ namespace FieaGameEngine
 
 		void InitializeSignatures();
 		void UpdateExternalStorage();
+
 		std::string RPN;
 
 		static HashMap<std::string, Operations> StringOperationMap;

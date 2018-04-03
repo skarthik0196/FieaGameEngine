@@ -1,29 +1,32 @@
 {
-  "If1__ActionListIf": 
-  {
-    "Condition": 
-    {
+  "If1__ActionListIf": {
+    "Condition": {
       "type": "Integer",
       "size": 1,
       "value": 1
     },
-    "then__TestAction": 
-    {
-      "TestAction1": 
-      {
+    "then__TestAction": {
+      "TestAction1": {
         "type": "Integer",
         "size": 1,
         "value": 1
       }
     },
-    "else__TestAction": 
-    {
-      "TestAction2": 
-      {
+    "else__TestAction": {
+      "TestAction2": {
         "type": "Integer",
         "size": 1,
         "value": 1
       }
     }
+  },
+  "Expr1__ActionExpression": 
+  {
+    "RPN__ActionExpression": 
+    {
+      "type": "String",
+      "size": 1,
+      "value": "5 * ( 1 + 1 )"
+    }
   }
-}
+  }
