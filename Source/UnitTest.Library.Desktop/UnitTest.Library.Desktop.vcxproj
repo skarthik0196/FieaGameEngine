@@ -201,6 +201,7 @@ Xcopy  /e /y  "$(SolutionDir)..\External\Scripts" "$(OutDir)Scripts"</Command>
     <ClCompile Include="AttributedTest.cpp" />
     <ClCompile Include="DatumTest.cpp" />
     <ClCompile Include="EntityWorldAndSectorTests.cpp" />
+    <ClCompile Include="EventTests.cpp" />
     <ClCompile Include="FactoryTest.cpp" />
     <ClCompile Include="Foo.cpp" />
     <ClCompile Include="HashMapTest.cpp" />

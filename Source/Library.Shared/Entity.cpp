@@ -106,6 +106,11 @@ namespace FieaGameEngine
 		return newAction;
 	}
 
+	void Entity::Notify(EventPublisher* event)
+	{
+		UNREFERENCED_PARAMETER(event);
+	}
+
 	void Entity::InitializeSignatures()
 	{
 		AddExternalAttribute("Name", &Name, 1);

@@ -1,5 +1,8 @@
 #include "pch.h"
 #include "TestEntity.h"
+#include "EventPublisher.h"
+#include "Event.h"
+#include "World.h"
 
 using namespace FieaGameEngine;
 
@@ -15,7 +18,7 @@ TestEntity::TestEntity(const std::string& name) : Entity(name)
 	InitializeSignatures();
 }
 
-TestEntity::TestEntity(const TestEntity& rhs) : Health(rhs.Health)
+TestEntity::TestEntity(const TestEntity& rhs) : Entity(rhs), Health(rhs.Health)
 {
 	UpdateExternalStorage();
 }
@@ -54,9 +57,19 @@ TestEntity & TestEntity::operator=(TestEntity&& rhs)
 	return *this;
 }
 
-void TestEntity::Update()
+void TestEntity::Update(WorldState& worldState)
 {
+	worldState.CurrentEntity = this;
+}
 
+void TestEntity::Notify(EventPublisher* event)
+{
+	event;
+	Event <World>* trueEvent = event->As<Event<World>>();
+	auto PayLoad = trueEvent->Message();
+
+	SetName("Event Recieved");
+	
 }
 
 void TestEntity::InitializeSignatures()

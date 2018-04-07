@@ -61,7 +61,7 @@ namespace FieaGameEngine
 	{
 		return Name;
 	}
-	void World::SetName(const std::string & name)
+	void World::SetName(const std::string& name)
 	{
 		Name = name;
 	}
@@ -70,8 +70,8 @@ namespace FieaGameEngine
 	{
 		CurrentWorldState.CurrentWorld = this;
 		CurrentWorldState.Update();
-
 		GrimReaper::KillAll();
+		WorldEventQueue.Update(CurrentWorldState.GetGameTime());
 
 		Datum& sectorList = (*this)["Sectors"];
 		for (uint32_t i = 0; i < sectorList.Length(); ++i)
@@ -98,6 +98,11 @@ namespace FieaGameEngine
 	Datum& World::GetSectors()
 	{
 		return (*this)["Sectors"];
+	}
+
+	EventQueue & World::GetEventQueue()
+	{
+		return WorldEventQueue;
 	}
 
 	void World::InitializeSignatures()

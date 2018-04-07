@@ -25,6 +25,7 @@
     <ClCompile Include="TestEntity.cpp" />
     <ClCompile Include="ActionTests.cpp" />
     <ClCompile Include="TestAction.cpp" />
+    <ClCompile Include="EventTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="UnitTest.Library.Desktop.rc" />

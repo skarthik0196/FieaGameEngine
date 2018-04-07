@@ -258,6 +258,12 @@ namespace UnitTestLibraryDesktop
 			Assert::AreEqual(0U, GrimReaper::KillListSize());
 			Assert::AreEqual(1U, AList1->GetActions().Length());
 
+			D1->AddSelfToKillList();
+
+			W1.Update();
+
+			Assert::AreEqual(0U, AList1->GetActions().Length());
+
 			AbstractFactory<Entity>::ClearFactories();
 			AbstractFactory<Action>::ClearFactories();
 		}
@@ -289,6 +295,58 @@ namespace UnitTestLibraryDesktop
 
 			AbstractFactory<Entity>::ClearFactories();
 			AbstractFactory<Action>::ClearFactories();
+		}
+
+		TEST_METHOD(ContrivedCopyAndMoveSemantics)
+		{
+			ActionList A1("asd");
+			ActionListIf A2("If1");
+			ActionExpression A3("4asd6");
+			ActionCreateAction A4;
+
+			A3.GetRPN();
+			A4.GetActionClassName();
+			A4.GetActionInstanceName();
+
+			ActionCreateAction A5(A4);
+			ActionCreateAction A6;
+			A6 = A5;
+			ActionCreateAction A7(std::move(A6));
+			ActionCreateAction A8;
+			A8 = std::move(A7);
+
+			ActionList A9(A1);
+			ActionList A10;
+			A10 = A9;
+			ActionList A11(std::move(A10));
+			ActionList A12;
+			A12 = std::move(A11);
+
+			ActionExpression A13(A3);
+			ActionExpression A14;
+			A14 = A13;
+			ActionExpression A15(std::move(A14));
+			ActionExpression A16;
+			A16 = std::move(A15);
+
+			ActionListIf A17(A2);
+			ActionListIf A18;
+			A18 = A17;
+			ActionListIf A19(std::move(A18));
+			ActionListIf A20;
+			A20 = std::move(A19);
+
+			ActionDestroyAction A21("Ad4");
+			A21.GetActionInstanceName();
+
+			ActionDestroyAction A22(A21);
+			ActionDestroyAction A23;
+			A23 = A22;
+			ActionDestroyAction A24(std::move(A23));
+			ActionDestroyAction A25;
+			A25 = std::move(A24);
+
+
 		}
 
 

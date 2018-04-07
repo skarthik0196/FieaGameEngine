@@ -22,24 +22,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)JsonParseMaster.cpp">
       <Filter>Parsing</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Action.cpp">
-      <Filter>EngineMantle</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)ActionCreateAction.cpp">
-      <Filter>EngineMantle</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)ActionDestroyAction.cpp">
-      <Filter>EngineMantle</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)ActionExpression.cpp">
-      <Filter>EngineMantle</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)ActionList.cpp">
-      <Filter>EngineMantle</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)ActionListIf.cpp">
-      <Filter>EngineMantle</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Entity.cpp">
       <Filter>EngineMantle</Filter>
     </ClCompile>
@@ -63,6 +45,33 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)jsoncpp.cpp">
       <Filter>Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Action.cpp">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)ActionCreateAction.cpp">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)ActionDestroyAction.cpp">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)ActionExpression.cpp">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)ActionList.cpp">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)ActionListIf.cpp">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)EventPublisher.cpp">
+      <Filter>EngineMantle\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)EventSubscriber.cpp">
+      <Filter>EngineMantle\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)EventQueue.cpp">
+      <Filter>EngineMantle\Events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -96,24 +105,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)JsonParseMaster.h">
       <Filter>Parsing</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Action.h">
-      <Filter>EngineMantle</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)ActionCreateAction.h">
-      <Filter>EngineMantle</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)ActionDestroyAction.h">
-      <Filter>EngineMantle</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)ActionExpression.h">
-      <Filter>EngineMantle</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)ActionList.h">
-      <Filter>EngineMantle</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)ActionListIf.h">
-      <Filter>EngineMantle</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Entity.h">
       <Filter>EngineMantle</Filter>
@@ -154,6 +145,36 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)json\json.h">
       <Filter>Parsing</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Action.h">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ActionCreateAction.h">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ActionDestroyAction.h">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ActionExpression.h">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ActionList.h">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ActionListIf.h">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)EventPublisher.h">
+      <Filter>EngineMantle\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)EventSubscriber.h">
+      <Filter>EngineMantle\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Event.h">
+      <Filter>EngineMantle\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)EventQueue.h">
+      <Filter>EngineMantle\Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Vector.inl">
@@ -164,6 +185,9 @@
     </None>
     <None Include="$(MSBuildThisFileDirectory)Hashmap.inl">
       <Filter>Containers</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Event.inl">
+      <Filter>EngineMantle\Events</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +205,12 @@
     </Filter>
     <Filter Include="Utility">
       <UniqueIdentifier>{328a2db2-0567-493c-8476-6ad74e77b077}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineMantle\Actions">
+      <UniqueIdentifier>{c65a9741-921a-443d-9ba9-acc272b50e1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineMantle\Events">
+      <UniqueIdentifier>{7ffe655d-d5ca-40ce-84a5-15542aeee2d0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

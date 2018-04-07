@@ -1,6 +1,7 @@
 #pragma once
 #include "Attributed.h"
 #include "WorldState.h"
+#include "EventSubscriber.h"
 
 namespace FieaGameEngine
 {
@@ -11,7 +12,7 @@ namespace FieaGameEngine
 	/// <summary>
 	/// Entity class derived from Attributed
 	/// </summary>
-	class Entity : public Attributed
+	class Entity : public Attributed, public EventSubscriber
 	{
 		RTTI_DECLARATIONS(Entity, Attributed)
 
@@ -91,6 +92,8 @@ namespace FieaGameEngine
 		Datum& GetActions();
 
 		Action* CreateAction(const std::string& actionClassName, const std::string& actionInstanceName);
+
+		void Notify(EventPublisher* event);
 
 	private:
 		void InitializeSignatures();

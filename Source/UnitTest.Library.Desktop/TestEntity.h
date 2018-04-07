@@ -1,9 +1,12 @@
 #pragma once
 #include "Entity.h"
+#include "EventSubscriber.h"
+#include "WorldState.h"
 
 class TestEntity : public FieaGameEngine::Entity
 {
 	RTTI_DECLARATIONS(TestEntity, Entity)
+
 public:
 	TestEntity();
 	TestEntity(const std::string& name);
@@ -14,7 +17,9 @@ public:
 	TestEntity& operator=(const TestEntity& rhs);
 	TestEntity& operator=(TestEntity&& rhs);
 
-	void Update();
+	void Update(FieaGameEngine::WorldState& worldState);
+
+	void Notify(FieaGameEngine::EventPublisher* event);
 
 private:
 	void InitializeSignatures();

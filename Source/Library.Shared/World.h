@@ -1,6 +1,14 @@
 #pragma once
 #include "Attributed.h"
 #include "WorldState.h"
+#include "EventQueue.h"
+
+// Use At for all containers, add Scope::At if necessary
+// Scope reference
+// Refactor Attributed
+// Null check for create and static cast instead of doing an As
+// Null out WorldState at the end
+
 
 namespace FieaGameEngine
 {
@@ -92,12 +100,16 @@ namespace FieaGameEngine
 		/// </summary>
 		/// <returns>A datum reference to the datum containing all sectors in the world</returns>
 		Datum& GetSectors();
+
+		EventQueue& GetEventQueue();
+
 	private:
 		void InitializeSignatures();
 		void UpdateExternalStorage();
 
 		std::string Name;
 		WorldState CurrentWorldState;
+		EventQueue WorldEventQueue;
 	};
 }
 
