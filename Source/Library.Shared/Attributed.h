@@ -1,6 +1,6 @@
 #pragma once
 #include"Scope.h"
-
+#include "TypeManager.h"
 
 namespace FieaGameEngine
 {
@@ -257,7 +257,7 @@ namespace FieaGameEngine
 		/// Get All prescribed attributes in the underlying scope
 		/// </summary>
 		/// <returns>A vector contatining all prescribed attributes</returns>
-		Vector<std::string> GetPrescribedAttributes() const;
+		Vector<Signature/*std::string*/> GetPrescribedAttributes() const;
 
 		/// <summary>
 		/// Get all Auxillary attributes in the underlying scope
@@ -284,6 +284,8 @@ namespace FieaGameEngine
 		/// <param name="rhs">Reference to the attribute to be move</param>
 		/// <returns>The attributed object after the move</returns>
 		Attributed& operator=(Attributed&& rhs);
+
+		void Populate(const uint64_t& runtimeID);
 
 	private:
 		void AddPrescribedKey(const std::string& name);

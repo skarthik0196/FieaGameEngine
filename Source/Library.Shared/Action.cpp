@@ -7,24 +7,35 @@ namespace FieaGameEngine
 {
 	RTTI_DEFINITIONS(Action)
 
-	Action::Action(): Attributed()
+	Action::Action(): Attributed(TypeIdInstance())
 	{
-		InitializeSignatures();
+		//InitializeSignatures();
 	}
 
-	Action::Action(const std::string& name) : Attributed(), Name(name)
+	Action::Action(const std::string& name) : Attributed(TypeIdInstance()), Name(name)
 	{
-		InitializeSignatures();
+		//InitializeSignatures();
+	}
+
+
+	Action::Action(const uint64_t& runtimeTypeID) : Attributed(runtimeTypeID)
+	{
+
+	}
+
+	Action::Action(const uint64_t& runtimeTypeID, const std::string& name) : Attributed(runtimeTypeID), Name(name)
+	{
+
 	}
 
 	Action::Action(const Action& rhs) : Attributed(rhs), Name(rhs.Name)
 	{
-		UpdateExternalStorage();
+		//UpdateExternalStorage();
 	}
 
 	Action::Action(Action&& rhs) : Attributed(std::move(rhs)), Name(std::move(rhs.Name))
 	{
-		UpdateExternalStorage();
+		//UpdateExternalStorage();
 	}
 
 	Action& Action::operator=(const Action& rhs)
@@ -33,7 +44,7 @@ namespace FieaGameEngine
 		{
 			Attributed::operator=(rhs);
 			Name = rhs.Name;
-			UpdateExternalStorage();
+			//UpdateExternalStorage();
 		}
 		return *this;
 	}
@@ -44,7 +55,7 @@ namespace FieaGameEngine
 		{
 			Attributed::operator=(std::move(rhs));
 			Name = std::move(rhs.Name);
-			UpdateExternalStorage();
+			//UpdateExternalStorage();
 		}
 		return *this;
 	}
@@ -72,6 +83,15 @@ namespace FieaGameEngine
 	{
 		entity.Adopt(*this, "Actions");
 	}
+
+	Vector<Signature> Action::GetSignature()
+	{
+		Vector<Signature> signature;
+		signature.PushBack(Signature("Name", Datum::DatumType::String, offsetof(Action, Name), 1));
+
+		return signature;
+	}
+
 
 	void Action::InitializeSignatures()
 	{

@@ -72,6 +72,8 @@ namespace FieaGameEngine
 		/// </summary>
 		void AddSelfToKillList();
 
+		static Vector<Signature> GetSignature();
+
 	private:
 		void InitializeSignatures();
 		void UpdateExternalStorage();

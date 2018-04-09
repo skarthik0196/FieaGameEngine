@@ -25,11 +25,6 @@ namespace UnitTestLibraryDesktop
 {
 	TEST_CLASS(EntitySectorWorldTests)
 	{
-	private:
-		World ContrivedWorld;
-		Sector ContrivedSector;
-		Entity ContrivedEntity;
-		TestEntity ContrivedTestEntity;
 	public:
 		static _CrtMemState sStartMemState;
 		/// <summary>
@@ -37,6 +32,11 @@ namespace UnitTestLibraryDesktop
 		/// </summary>
 		TEST_METHOD_INITIALIZE(Initialize)
 		{
+			TypeManager::RegisterType(Entity::TypeIdClass(), Entity::GetSignature());
+			TypeManager::RegisterType(TestEntity::TypeIdClass(), TestEntity::GetSignature());
+			TypeManager::RegisterType(Sector::TypeIdClass(), Sector::GetSignature());
+			TypeManager::RegisterType(World::TypeIdClass(), World::GetSignature());
+
 #ifdef _DEBUG
 			_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF);
 			_CrtMemCheckpoint(&sStartMemState);

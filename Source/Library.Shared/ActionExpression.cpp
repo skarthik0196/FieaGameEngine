@@ -7,24 +7,24 @@
 namespace FieaGameEngine
 {
 	RTTI_DEFINITIONS(ActionExpression)
-	ActionExpression::ActionExpression():Action()
+	ActionExpression::ActionExpression():Action(TypeIdInstance())
 	{
-		ActionExpression::InitializeSignatures();
+		//ActionExpression::InitializeSignatures();
 	}
 
-	ActionExpression::ActionExpression(const std::string& name) : Action(name)
+	ActionExpression::ActionExpression(const std::string& name) : Action(TypeIdInstance(), name)
 	{
-		ActionExpression::InitializeSignatures();
+		//ActionExpression::InitializeSignatures();
 	}
 
 	ActionExpression::ActionExpression(const ActionExpression& rhs) : Action(rhs), RPN(rhs.RPN)
 	{
-		ActionExpression::UpdateExternalStorage();
+		//ActionExpression::UpdateExternalStorage();
 	}
 
 	ActionExpression::ActionExpression(ActionExpression&& rhs) :Action(std::move(rhs)), RPN(std::move(rhs.RPN))
 	{
-		ActionExpression::UpdateExternalStorage();
+		//ActionExpression::UpdateExternalStorage();
 	}
 
 	ActionExpression::~ActionExpression()
@@ -38,7 +38,7 @@ namespace FieaGameEngine
 		{
 			Action::operator=(rhs);
 			RPN = rhs.RPN;
-			UpdateExternalStorage();
+			//UpdateExternalStorage();
 		}
 		return *this;
 	}
@@ -49,7 +49,7 @@ namespace FieaGameEngine
 		{
 			Action::operator=(std::move(rhs));
 			RPN = std::move(rhs.RPN);
-			UpdateExternalStorage();
+			//UpdateExternalStorage();
 		}
 		return *this;
 	}
@@ -68,6 +68,14 @@ namespace FieaGameEngine
 	void ActionExpression::SetRPN(const std::string& rpn)
 	{
 		RPN = rpn;
+	}
+
+	Vector<Signature> ActionExpression::GetSignature()
+	{
+		Vector<Signature> signature = Action::GetSignature();
+		signature.PushBack(Signature("RPN", Datum::DatumType::String, offsetof(ActionExpression, RPN), 1));
+
+		return signature;
 	}
 
 	void ActionExpression::EvaluateRPN()

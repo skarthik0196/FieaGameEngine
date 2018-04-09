@@ -7,14 +7,25 @@ namespace FieaGameEngine
 {
 	RTTI_DEFINITIONS(ActionList)
 
-	ActionList::ActionList()
+	ActionList::ActionList() : Action(TypeIdInstance())
 	{
-		ActionList::InitializeSignatures();
+		//ActionList::InitializeSignatures();
 	}
 
-	ActionList::ActionList(const std::string & name) : Action(name)
+	ActionList::ActionList(const std::string& name) : Action(TypeIdInstance(), name)
 	{
-		ActionList::InitializeSignatures();
+		//ActionList::InitializeSignatures();
+	}
+
+
+	ActionList::ActionList(const uint64_t& runtimeTypeID, const std::string &name) : Action(runtimeTypeID, name)
+	{
+
+	}
+
+	ActionList::ActionList(const uint64_t& runtimeTypeID) : Action(runtimeTypeID)
+	{
+
 	}
 
 	ActionList::ActionList(const ActionList& rhs) :Action(rhs)
@@ -74,6 +85,14 @@ namespace FieaGameEngine
 			assert(actions.Get<Scope*>(i)->Is("Action"));
 			static_cast<Action*>(actions.Get<Scope*>(i))->Update(worldState);
 		}
+	}
+
+	Vector<Signature> ActionList::GetSignature()
+	{
+		Vector<Signature> signature = Action::GetSignature();
+		signature.PushBack(Signature("Actions", Datum::DatumType::Table, 1, 1));
+
+		return signature;
 	}
 
 	void ActionList::InitializeSignatures()

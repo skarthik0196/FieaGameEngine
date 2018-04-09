@@ -8,9 +8,9 @@
 namespace FieaGameEngine
 {
 	RTTI_DEFINITIONS(ActionCreateAction)
-	ActionCreateAction::ActionCreateAction() : Action()
+	ActionCreateAction::ActionCreateAction() : Action(TypeIdInstance())
 	{
-		InitializeSignatures();
+		//InitializeSignatures();
 	}
 
 	ActionCreateAction::ActionCreateAction(const ActionCreateAction& rhs) :Action(rhs)
@@ -87,6 +87,15 @@ namespace FieaGameEngine
 				aListParent->CreateAction(ActionClassName, ActionInstanceName);
 			}
 		}
+	}
+
+	Vector<Signature> ActionCreateAction::GetSignature()
+	{
+		Vector<Signature> signature = Action::GetSignature();
+		signature.PushBack(Signature("ActionClassName", Datum::DatumType::String, offsetof(ActionCreateAction, ActionClassName), 1));
+		signature.PushBack(Signature("ActionInstanceName", Datum::DatumType::String, offsetof(ActionCreateAction, ActionInstanceName), 1));
+
+		return signature;
 	}
 
 	void ActionCreateAction::InitializeSignatures()

@@ -21,6 +21,8 @@ public:
 
 	void Notify(FieaGameEngine::EventPublisher* event);
 
+	static FieaGameEngine::Vector<FieaGameEngine::Signature> GetSignature();
+
 private:
 	void InitializeSignatures();
 	void UpdateExternalStorage();

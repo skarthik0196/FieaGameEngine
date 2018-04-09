@@ -7,7 +7,7 @@ RTTI_DEFINITIONS(AttributedFoo);
 
 AttributedFoo::AttributedFoo() :Attributed(TypeIdClass())
 {
-	InitializeSignatures();
+	//InitializeSignatures();
 }
 
 
@@ -26,7 +26,7 @@ ExternalString(rhs.ExternalString), ExternalVector(rhs.ExternalVector), External
 	std::copy(std::begin(rhs.ExternalVectorArray), std::end(rhs.ExternalVectorArray), stdext::checked_array_iterator<glm::vec4*>(ExternalVectorArray, 5));
 	std::copy(std::begin(rhs.ExternalMatrixArray), std::end(rhs.ExternalMatrixArray), stdext::checked_array_iterator<glm::mat4x4*>(ExternalMatrixArray, 5));
 
-	UpdateExternalStorage();
+	//UpdateExternalStorage();
 }
 
 AttributedFoo& AttributedFoo::operator=(const AttributedFoo& rhs)
@@ -48,7 +48,7 @@ AttributedFoo& AttributedFoo::operator=(const AttributedFoo& rhs)
 		std::copy(std::begin(rhs.ExternalVectorArray), std::end(rhs.ExternalVectorArray), stdext::checked_array_iterator<glm::vec4*>(ExternalVectorArray, 5));
 		std::copy(std::begin(rhs.ExternalMatrixArray), std::end(rhs.ExternalMatrixArray), stdext::checked_array_iterator<glm::mat4x4*>(ExternalMatrixArray , 5));
 
-		UpdateExternalStorage();
+		//UpdateExternalStorage();
 	}
 
 	return *this;
@@ -64,7 +64,7 @@ ExternalString(std::move(rhs.ExternalString)), ExternalVector(std::move(rhs.Exte
 	std::move(std::begin(rhs.ExternalVectorArray), std::end(rhs.ExternalVectorArray), stdext::checked_array_iterator<glm::vec4*>(ExternalVectorArray, 5));
 	std::move(std::begin(rhs.ExternalMatrixArray), std::end(rhs.ExternalMatrixArray), stdext::checked_array_iterator<glm::mat4x4*>(ExternalMatrixArray, 5));
 
-	UpdateExternalStorage();
+	//UpdateExternalStorage();
 }
 
 AttributedFoo& AttributedFoo::operator=(AttributedFoo&& rhs)
@@ -86,7 +86,7 @@ AttributedFoo& AttributedFoo::operator=(AttributedFoo&& rhs)
 		std::move(std::begin(rhs.ExternalVectorArray), std::end(rhs.ExternalVectorArray), stdext::checked_array_iterator<glm::vec4*>(ExternalVectorArray, 5));
 		std::move(std::begin(rhs.ExternalMatrixArray), std::end(rhs.ExternalMatrixArray), stdext::checked_array_iterator<glm::mat4x4*>(ExternalMatrixArray, 5));
 
-		UpdateExternalStorage();
+		//UpdateExternalStorage();
 	}
 
 	return *this;
@@ -158,4 +158,29 @@ void AttributedFoo::UpdateExternalStorage()
 	UpdateStorage("Array3", std::begin(ExternalStringArray), 5);
 	UpdateStorage("Array4", std::begin(ExternalVectorArray), 5);
 	UpdateStorage("Array5", std::begin(ExternalMatrixArray), 5);
+}
+
+const int32_t & AttributedFoo::GetE1() const
+{
+	return ExternalInteger;
+}
+
+FieaGameEngine::Vector<FieaGameEngine::Signature> AttributedFoo::GetSignature()
+{
+	FieaGameEngine::Vector<FieaGameEngine::Signature> signatures;
+	signatures.PushBack(Signature("E1", Datum::DatumType::Integer, offsetof(AttributedFoo, ExternalInteger), 1));
+	signatures.PushBack(Signature("E2", Datum::DatumType::Float, offsetof(AttributedFoo, ExternalFloat), 1));
+	signatures.PushBack(Signature("E3", Datum::DatumType::String, offsetof(AttributedFoo, ExternalString), 1));
+	signatures.PushBack(Signature("E4", Datum::DatumType::Vector4, offsetof(AttributedFoo, ExternalVector), 1));
+	signatures.PushBack(Signature("E5", Datum::DatumType::Matrix4x4, offsetof(AttributedFoo, ExternalMatrix), 1));
+	signatures.PushBack(Signature("E6", Datum::DatumType::RTTIPointer, offsetof(AttributedFoo, ExternalRTTI), 1));
+	signatures.PushBack(Signature("E7", Datum::DatumType::Table, offsetof(AttributedFoo, ContrivedScope), 1));
+
+	signatures.PushBack(Signature("Array1", Datum::DatumType::Integer, offsetof(AttributedFoo, ExternalIntArray), 5));
+	signatures.PushBack(Signature("Array2", Datum::DatumType::Float, offsetof(AttributedFoo, ExternalFloatArray), 5));
+	signatures.PushBack(Signature("Array3", Datum::DatumType::String, offsetof(AttributedFoo, ExternalStringArray), 5));
+	signatures.PushBack(Signature("Array4", Datum::DatumType::Vector4, offsetof(AttributedFoo, ExternalVectorArray), 5));
+	signatures.PushBack(Signature("Array5", Datum::DatumType::Matrix4x4, offsetof(AttributedFoo, ExternalMatrixArray), 5));
+
+	return signatures;
 }

@@ -11,24 +11,34 @@ namespace FieaGameEngine
 {
 	RTTI_DEFINITIONS(Entity)
 
-	Entity::Entity() : Attributed()
+	Entity::Entity() : Attributed(TypeIdInstance())
 	{
-		InitializeSignatures();
+		//InitializeSignatures();
 	}
 
-	Entity::Entity(const std::string& name) :Attributed(), Name(name)
+
+	Entity::Entity(const uint64_t& runtimeTypeID) : Attributed(runtimeTypeID)
 	{
-		InitializeSignatures();
+
+	}
+
+	Entity::Entity(const uint64_t & runtimeTypeID, const std::string & name) : Attributed(runtimeTypeID), Name(name)
+	{
+	}
+
+	Entity::Entity(const std::string& name) :Attributed(TypeIdInstance()), Name(name)
+	{
+		//InitializeSignatures();
 	}
 
 	Entity::Entity(const Entity& rhs) : Attributed(rhs), Name(rhs.Name)
 	{
-		UpdateExternalStorage();
+		//UpdateExternalStorage();
 	}
 
 	Entity::Entity(Entity&& rhs) : Attributed(std::move(rhs)), Name(std::move(rhs.Name))
 	{
-		UpdateExternalStorage();
+		//UpdateExternalStorage();
 	}
 
 	Entity& Entity::operator=(const Entity& rhs)
@@ -37,7 +47,7 @@ namespace FieaGameEngine
 		{
 			Attributed::operator=(rhs);
 			Name = rhs.Name;
-			UpdateExternalStorage();
+			//UpdateExternalStorage();
 		}
 		return *this;
 	}
@@ -48,7 +58,7 @@ namespace FieaGameEngine
 		{
 			Attributed::operator=(std::move(rhs));
 			Name = std::move(rhs.Name);
-			UpdateExternalStorage();
+			//UpdateExternalStorage();
 		}
 		return *this;
 	}
@@ -109,6 +119,16 @@ namespace FieaGameEngine
 	void Entity::Notify(EventPublisher* event)
 	{
 		UNREFERENCED_PARAMETER(event);
+	}
+
+	Vector<Signature> Entity::GetSignature()
+	{
+		Vector<Signature> signatures;
+
+		signatures.PushBack(Signature("Name", Datum::DatumType::String, offsetof(Entity, Name), 1));
+		signatures.PushBack(Signature("Actions", Datum::DatumType::Table, offsetof(Entity, Name), 1));
+
+		return signatures;
 	}
 
 	void Entity::InitializeSignatures()

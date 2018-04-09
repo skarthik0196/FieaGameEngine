@@ -83,6 +83,13 @@ namespace FieaGameEngine
 		/// <param name="entity">Reference to an entity</param>
 		void SetEntity(Entity& entity);
 
+		static Vector<Signature> GetSignature();
+
+	protected:
+
+		Action(const uint64_t& runtimeTypeID);
+		Action(const uint64_t& runtimeTypeID, const std::string& name);
+
 	private:
 		void InitializeSignatures();
 		void UpdateExternalStorage();

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Attributed.h"
+#include "TypeManager.h"
 
 
 namespace FieaGameEngine
@@ -8,18 +9,23 @@ namespace FieaGameEngine
 
 	Attributed::Attributed()
 	{
-		AddInternalAttribute("this", this, 1);
+		//AddInternalAttribute("this", this, 1);
+		Datum &datum = Append("this");
+		datum.PushBack(static_cast<RTTI*>(this));
 	}
 
 	Attributed::Attributed(const uint64_t& runtimeTypeID)
 	{
 		Datum &datum = Append("this");
 		datum.PushBack(static_cast<RTTI*>(this));
-		Attributed* FirstEntryPointer = (*FirstEntry.Insert(std::make_pair(runtimeTypeID, this))).second;
+
+		Populate(runtimeTypeID);
+
+		/*Attributed* FirstEntryPointer = (*FirstEntry.Insert(std::make_pair(runtimeTypeID, this))).second;
 		if (FirstEntryPointer == this)
 		{
 			PrescribedAttributes[runtimeTypeID].PushBack("this");
-		}
+		}*/
 	}
 
 
@@ -31,11 +37,13 @@ namespace FieaGameEngine
 	Attributed::Attributed(const Attributed& rhs) : Scope(rhs)
 	{
 		(*this)["this"] = static_cast<RTTI*>(this);
+		Populate(rhs.TypeIdInstance());
 	}
 
 	Attributed::Attributed(Attributed&& rhs) : Scope(std::move(rhs))
 	{
 		(*this)["this"] = static_cast<RTTI*>(this);
+		Populate(rhs.TypeIdInstance());
 	}
 
 	Attributed& Attributed::operator=(const Attributed& rhs)
@@ -44,6 +52,7 @@ namespace FieaGameEngine
 		{
 			Scope::operator=(rhs);
 			(*this)["this"] = static_cast<RTTI*>(this);
+			Populate(rhs.TypeIdInstance());
 		}
 
 		return *this;
@@ -55,14 +64,30 @@ namespace FieaGameEngine
 		{
 			Scope::operator=(std::move(rhs));
 			(*this)["this"] = static_cast<RTTI*>(this);
+			Populate(rhs.TypeIdInstance());
 		}
 
 		return *this;
 	}
 
+	void Attributed::Populate(const uint64_t & runtimeID)
+	{
+		Vector<Signature> signatures = TypeManager::GetSignatures(runtimeID);
+		for (auto& signature : signatures)
+		{
+			Datum& datum = Append(signature.Name);
+			datum.SetType(signature.Type);
+			if (signature.Type != Datum::DatumType::Table)
+			{
+				void *offset = reinterpret_cast<uint8_t*>(this) + signature.Offset;
+				datum.SetStorage(offset, signature.Size);
+			}
+		}
+	}
+
 	Datum& Attributed::AppendAuxillaryAttribute(const std::string& name)
 	{
-		if (PrescribedAttributes[TypeIdInstance()].Find(name) != PrescribedAttributes[TypeIdInstance()].end())
+		if (IsPrescribedAttribute(name))
 		{
 			throw std::runtime_error("Invalid String");
 		}
@@ -78,7 +103,8 @@ namespace FieaGameEngine
 	bool Attributed::IsPrescribedAttribute(const std::string& name) const
 	{
 		bool Result = false;
-		HashMap<uint64_t, Vector<std::string>>::Iterator It = PrescribedAttributes.Find(TypeIdInstance());
+
+		/*HashMap<uint64_t, Vector<std::string>>::Iterator It = PrescribedAttributes.Find(TypeIdInstance());
 		if (It != PrescribedAttributes.end())
 		{
 			Vector<std::string>::Iterator VIt = (*It).second.Find(name);
@@ -86,7 +112,20 @@ namespace FieaGameEngine
 			{
 				Result = true;
 			}
+		}*/
+
+		Vector<Signature> signatures = TypeManager::GetSignatures(TypeIdInstance());
+		Vector<Signature>::Iterator It = signatures.begin();
+
+		for (auto& signature : signatures)
+		{
+			if (signature.Name == name)
+			{
+				Result = true;
+				break;
+			}
 		}
+
 		return Result;
 	}
 
@@ -322,9 +361,9 @@ namespace FieaGameEngine
 	}
 
 	//Do Hashmap Finds
-	Vector<std::string> Attributed::GetPrescribedAttributes() const
+	Vector<Signature> Attributed::GetPrescribedAttributes() const
 	{
-		const Vector<std::pair<std::string, Datum>*>& orderedVector = GetOrderedVector();
+		/*const Vector<std::pair<std::string, Datum>*>& orderedVector = GetOrderedVector();
 		Vector<std::string> temp;
 
 		Vector<std::string>& prescribedKeyList = PrescribedAttributes[TypeIdInstance()];
@@ -334,8 +373,9 @@ namespace FieaGameEngine
 			{
 				temp.PushBack(value->first);
 			}
-		}
-		return temp;
+		}*/
+
+		return TypeManager::GetSignatures(TypeIdInstance());
 	}
 
 	// Prescribed Attributes +1
@@ -345,14 +385,21 @@ namespace FieaGameEngine
 		const Vector<std::pair<std::string, Datum>*>& orderedVector = GetOrderedVector();
 		Vector<std::string> temp;
 
-		Vector<std::string>& prescribedKeyList = PrescribedAttributes[TypeIdInstance()];
+		uint32_t prescribedSize =TypeManager::GetSignatures(TypeIdInstance()).Length();
+
+		for (uint32_t i = prescribedSize; i < orderedVector.Length(); ++i)
+		{
+			temp.PushBack(orderedVector[i]->first);
+		}
+
+		/*Vector<std::string>& prescribedKeyList = PrescribedAttributes[TypeIdInstance()];
 		for (auto& value : orderedVector)
 		{
 			if (prescribedKeyList.Find(value->first) == prescribedKeyList.end())
 			{
 				temp.PushBack(value->first);
 			}
-		}
+		}*/
 
 		return temp;
 	}

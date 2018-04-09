@@ -3,29 +3,31 @@
 #include "EventPublisher.h"
 #include "Event.h"
 #include "World.h"
+#include "Action.h"
+#include <cassert>
 
 using namespace FieaGameEngine;
 
 RTTI_DEFINITIONS(TestEntity)
 
-TestEntity::TestEntity() : Entity()
+TestEntity::TestEntity() : Entity(TypeIdInstance())
 {
-	InitializeSignatures();
+	//InitializeSignatures();
 }
 
-TestEntity::TestEntity(const std::string& name) : Entity(name)
+TestEntity::TestEntity(const std::string& name) : Entity(TypeIdInstance(), name)
 {
-	InitializeSignatures();
+	//InitializeSignatures();
 }
 
 TestEntity::TestEntity(const TestEntity& rhs) : Entity(rhs), Health(rhs.Health)
 {
-	UpdateExternalStorage();
+	//UpdateExternalStorage();
 }
 
 TestEntity::TestEntity(TestEntity&& rhs) : Health(std::move(rhs.Health))
 {
-	UpdateExternalStorage();
+	//UpdateExternalStorage();
 }
 
 TestEntity::~TestEntity()
@@ -39,7 +41,7 @@ TestEntity & TestEntity::operator=(const TestEntity& rhs)
 	{
 		Entity::operator=(rhs);
 		Health = rhs.Health;
-		UpdateExternalStorage();
+		//UpdateExternalStorage();
 	}
 
 	return *this;
@@ -51,7 +53,7 @@ TestEntity & TestEntity::operator=(TestEntity&& rhs)
 	{
 		Entity::operator=(std::move(rhs));
 		Health = std::move(rhs.Health);
-		UpdateExternalStorage();
+		//UpdateExternalStorage();
 	}
 
 	return *this;
@@ -60,6 +62,14 @@ TestEntity & TestEntity::operator=(TestEntity&& rhs)
 void TestEntity::Update(WorldState& worldState)
 {
 	worldState.CurrentEntity = this;
+
+	Datum& actions = GetActions();
+	for (uint32_t i = 0; i < actions.Length(); ++i)
+	{
+		assert(actions.Get<Scope*>(i)->Is(Action::TypeIdClass()));
+		static_cast<Action*>(actions.Get<Scope*>(i))->Update(worldState);
+	}
+
 }
 
 void TestEntity::Notify(EventPublisher* event)
@@ -70,6 +80,15 @@ void TestEntity::Notify(EventPublisher* event)
 
 	SetName("Event Recieved");
 	
+}
+
+Vector<Signature> TestEntity::GetSignature()
+{
+	Vector<Signature> signature = Entity::GetSignature();
+
+	signature.PushBack(Signature("Health", Datum::DatumType::Integer, offsetof(TestEntity, Health), 1));
+
+	return signature;
 }
 
 void TestEntity::InitializeSignatures()

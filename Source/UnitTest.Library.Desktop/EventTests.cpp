@@ -37,14 +37,13 @@ namespace UnitTestLibraryDesktop
 
 	TEST_MODULE_INITIALIZE(OverallInitialization)
 	{
-		CreateConcreteFactory(TestEntity, Entity);
-		Event<World>::ReserveSpace(10);
+		
 	}
 
 	TEST_CLASS(EventTests)
 	{
 	private:
-		World ContrivedWorld;
+		/*World ContrivedWorld;
 		Sector ContrivedSector;
 		Entity ContrivedEntity;
 		TestEntity ContrivedTestEntity;
@@ -52,7 +51,7 @@ namespace UnitTestLibraryDesktop
 		ActionListIf If1;
 		ActionExpression XX;
 		ActionDestroyAction ContrivedDestroyAction;
-		ActionCreateAction ContrivedCreateAction;
+		ActionCreateAction ContrivedCreateAction;*/
 	public:
 		static _CrtMemState sStartMemState;
 		/// <summary>
@@ -60,6 +59,20 @@ namespace UnitTestLibraryDesktop
 		/// </summary>
 		TEST_METHOD_INITIALIZE(Initialize)
 		{
+			//Event<World>::ReserveSpace(10);
+
+			TypeManager::RegisterType(World::TypeIdClass(), World::GetSignature());
+			TypeManager::RegisterType(Sector::TypeIdClass(), Sector::GetSignature());
+			TypeManager::RegisterType(Entity::TypeIdClass(), Entity::GetSignature());
+			TypeManager::RegisterType(TestEntity::TypeIdClass(), TestEntity::GetSignature());
+			TypeManager::RegisterType(Action::TypeIdClass(), Action::GetSignature());
+			TypeManager::RegisterType(ActionList::TypeIdClass(), ActionList::GetSignature());
+			TypeManager::RegisterType(ActionListIf::TypeIdClass(), ActionListIf::GetSignature());
+			TypeManager::RegisterType(ActionExpression::TypeIdClass(), ActionExpression::GetSignature());
+			TypeManager::RegisterType(ActionDestroyAction::TypeIdClass(), ActionDestroyAction::GetSignature());
+			TypeManager::RegisterType(ActionCreateAction::TypeIdClass(), ActionCreateAction::GetSignature());
+			TypeManager::RegisterType(TestAction::TypeIdClass(), TestAction::GetSignature());
+
 #ifdef _DEBUG
 			_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF);
 			_CrtMemCheckpoint(&sStartMemState);
@@ -71,6 +84,7 @@ namespace UnitTestLibraryDesktop
 		/// </summary>
 		TEST_METHOD_CLEANUP(Cleanup)
 		{
+			Event<World>::ShrinkToFitSubscriberList();
 #ifdef _DEBUG
 			_CrtMemState endMemState, diffMemState;
 			_CrtMemCheckpoint(&endMemState);
@@ -85,6 +99,8 @@ namespace UnitTestLibraryDesktop
 
 		TEST_METHOD(EventInitialization)
 		{
+			CreateConcreteFactory(TestEntity, Entity);
+
 			World W1("W1");
 			Event<World> E1(W1);
 			Sector *S1 = W1.CreateSector("S1");
@@ -95,11 +111,15 @@ namespace UnitTestLibraryDesktop
 
 			W1.Update();
 
+			Event<World>::ShrinkToFitSubscriberList();
+
 			AbstractFactory<Entity>::ClearFactories();
 		}
 
 		TEST_METHOD(Enqueue)
 		{
+			CreateConcreteFactory(TestEntity, Entity);
+
 			World W1("W1");
 			Sector *S1 = W1.CreateSector("S1");
 			TestEntity *TE1 = static_cast<TestEntity*>(S1->CreateEntity("TestEntity", "E1"));
@@ -136,10 +156,17 @@ namespace UnitTestLibraryDesktop
 			W1.GetEventQueue().Clear();
 			Assert::AreEqual(0U, W1.GetEventQueue().Length());
 			Assert::AreEqual(true, W1.GetEventQueue().IsEmpty());
+
+			Event<World>::UnsubscribeAll();
+			Event<World>::ShrinkToFitSubscriberList();
+
+			AbstractFactory<Entity>::ClearFactories();
 		}
 
 		TEST_METHOD(Send)
 		{
+			CreateConcreteFactory(TestEntity, Entity);
+
 			World W1("W1");
 			Sector *S1 = W1.CreateSector("S1");
 			TestEntity *TE1 = static_cast<TestEntity*>(S1->CreateEntity("TestEntity", "E1"));
@@ -167,6 +194,11 @@ namespace UnitTestLibraryDesktop
 
 			Assert::AreEqual("Event Recieved"s, TE1->GetName());
 			Assert::AreEqual(3U, W1.GetEventQueue().Length());
+
+			Event<World>::UnsubscribeAll();
+			Event<World>::ShrinkToFitSubscriberList();
+
+			AbstractFactory<Entity>::ClearFactories();
 		}
 
 	};

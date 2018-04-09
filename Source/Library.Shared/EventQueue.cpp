@@ -47,6 +47,6 @@ namespace FieaGameEngine
 
 	uint32_t FieaGameEngine::EventQueue::Length() const
 	{
-		return Queue.size();
+		return static_cast<uint32_t>(Queue.size());
 	}
 }

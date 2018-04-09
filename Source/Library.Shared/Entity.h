@@ -95,6 +95,12 @@ namespace FieaGameEngine
 
 		void Notify(EventPublisher* event);
 
+		static Vector<Signature> GetSignature();
+
+	protected:
+		Entity(const uint64_t& runtimeTypeID);
+		Entity(const uint64_t& runtimeTypeID, const std::string& name);
+
 	private:
 		void InitializeSignatures();
 		void UpdateExternalStorage();

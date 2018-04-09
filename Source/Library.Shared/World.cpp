@@ -9,24 +9,24 @@ namespace FieaGameEngine
 {
 	RTTI_DEFINITIONS(World)
 
-	World::World() : Attributed()
+	World::World() : Attributed(TypeIdInstance())
 	{
-		InitializeSignatures();
+		//InitializeSignatures();
 	}
 
-	World::World(const std::string& name) : Attributed(), Name(name)
+	World::World(const std::string& name) : Attributed(TypeIdInstance()), Name(name)
 	{
-		InitializeSignatures();
+		//InitializeSignatures();
 	}
 
 	World::World(const World& rhs) : Attributed(rhs), Name(rhs.Name)
 	{
-		UpdateExternalStorage();
+		//UpdateExternalStorage();
 	}
 
 	World::World(World&& rhs) : Attributed(std::move(rhs)), Name(std::move(rhs.Name))
 	{
-		UpdateExternalStorage();
+		//UpdateExternalStorage();
 	}
 
 	World::~World()
@@ -40,7 +40,7 @@ namespace FieaGameEngine
 		{
 			Attributed::operator=(rhs);
 			Name = rhs.Name;
-			UpdateExternalStorage();
+			//UpdateExternalStorage();
 		}
 		return *this;
 	 }
@@ -51,7 +51,7 @@ namespace FieaGameEngine
 		{
 			Attributed::operator=(std::move(rhs));
 			Name = std::move(rhs.Name);
-			UpdateExternalStorage();
+			//UpdateExternalStorage();
 		}
 
 		return *this;
@@ -103,6 +103,15 @@ namespace FieaGameEngine
 	EventQueue & World::GetEventQueue()
 	{
 		return WorldEventQueue;
+	}
+
+	Vector<Signature> World::GetSignature()
+	{
+		Vector<Signature> signature;
+		signature.PushBack(Signature("Name", Datum::DatumType::String, offsetof(World, Name), 1));
+		signature.PushBack(Signature("Sectors", Datum::DatumType::Table, offsetof(World, Name), 1));
+
+		return signature;
 	}
 
 	void World::InitializeSignatures()

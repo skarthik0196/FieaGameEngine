@@ -990,6 +990,25 @@ namespace FieaGameEngine
 		Size = size;
 	}
 
+	void Datum::SetStorage(void * externalStorage, const int32_t size)
+	{
+		if (size == 0)
+		{
+			throw std::runtime_error("Invalid Size");
+		}
+
+		if ((IsExternalStorage == false) && (Capacity > 0))
+		{
+			Clear();
+			free(Data.GeneralPurposePointer);
+		}
+
+		IsExternalStorage = true;
+		Data.GeneralPurposePointer = externalStorage;
+		Size = size;
+		Capacity = size;
+	}
+
 	/*void Datum::SetStorage(Scope** valueArray, const int32_t& size)
 	{
 		if (size == 0)

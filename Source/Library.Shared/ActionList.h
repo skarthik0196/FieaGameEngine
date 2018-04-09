@@ -76,6 +76,12 @@ namespace FieaGameEngine
 		/// <param name="worldState"></param>
 		void Update(WorldState& worldState);
 
+		static Vector<Signature> GetSignature();
+
+	protected:
+		explicit ActionList(const uint64_t& runtimeTypeID, const std::string& name);
+		explicit ActionList(const uint64_t& runtimeTypeID);
+
 	private:
 		void InitializeSignatures();
 	};

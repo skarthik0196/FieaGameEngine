@@ -6,25 +6,25 @@ namespace FieaGameEngine
 {
 	RTTI_DEFINITIONS(ActionDestroyAction)
 
-	ActionDestroyAction::ActionDestroyAction()
+	ActionDestroyAction::ActionDestroyAction() : Action(TypeIdInstance())
 	{
-		InitializeSignatures();
+		//InitializeSignatures();
 	}
 
 
-	ActionDestroyAction::ActionDestroyAction(const std::string& name) : Action(name)
+	ActionDestroyAction::ActionDestroyAction(const std::string& name) : Action(TypeIdInstance(), name)
 	{
-		InitializeSignatures();
+		//InitializeSignatures();
 	}
 
 	ActionDestroyAction::ActionDestroyAction(const ActionDestroyAction& rhs) : Action(rhs)
 	{
-		UpdateExternalStorage();
+		//UpdateExternalStorage();
 	}
 
 	ActionDestroyAction::ActionDestroyAction(ActionDestroyAction&& rhs) : Action(std::move(rhs))
 	{
-		UpdateExternalStorage();
+		//UpdateExternalStorage();
 	}
 
 	ActionDestroyAction::~ActionDestroyAction()
@@ -38,7 +38,7 @@ namespace FieaGameEngine
 		{
 			Action::operator=(rhs);
 			ActionInstanceName = rhs.ActionInstanceName;
-			UpdateExternalStorage();
+			//UpdateExternalStorage();
 		}
 		return *this;
 	}
@@ -49,7 +49,7 @@ namespace FieaGameEngine
 		{
 			Action::operator=(std::move(rhs));
 			ActionInstanceName = std::move(rhs.ActionInstanceName);
-			UpdateExternalStorage();
+			//UpdateExternalStorage();
 		}
 		return *this;
 	}
@@ -97,6 +97,14 @@ namespace FieaGameEngine
 	void ActionDestroyAction::AddSelfToKillList()
 	{
 		GrimReaper::AddToKillList(*this);
+	}
+
+	Vector<Signature> ActionDestroyAction::GetSignature()
+	{
+		Vector<Signature> signature = Action::GetSignature();
+		signature.PushBack(Signature("ActionInstanceName", Datum::DatumType::String, offsetof(ActionDestroyAction, ActionInstanceName), 1));
+
+		return signature;
 	}
 
 	void ActionDestroyAction::InitializeSignatures()

@@ -337,6 +337,8 @@ namespace FieaGameEngine
 		/// <param name="size">The size of the external data</param>
 		void SetStorage(RTTI** valueArray, const int32_t& size);
 
+		void SetStorage(void* externalStorage, const int32_t size);
+
 		//void SetStorage(Scope** valueArray, const int32_t& size);	//TODO
 
 		/// <summary>

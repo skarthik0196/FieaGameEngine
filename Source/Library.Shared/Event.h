@@ -22,6 +22,7 @@ namespace FieaGameEngine
 		static void UnsubscribeAll();
 
 		static void ReserveSpace(const uint32_t& size);
+		static void ShrinkToFitSubscriberList();
 
 		T& Message();
 

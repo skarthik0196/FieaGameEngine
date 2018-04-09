@@ -101,6 +101,9 @@ namespace FieaGameEngine
 		/// <returns>A Datum containing all</returns>
 		Datum& GetEntities();
 
+		static Vector<Signature> GetSignature();
+		
+
 	private:
 		void InitializeSignatures();
 		void UpdateExternalStorage();

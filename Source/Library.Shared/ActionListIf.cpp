@@ -6,24 +6,24 @@ namespace FieaGameEngine
 {
 	RTTI_DEFINITIONS(ActionListIf)
 
-	ActionListIf::ActionListIf() : ActionList()
+	ActionListIf::ActionListIf() : ActionList(TypeIdInstance())
 	{
-		ActionListIf::InitializeSignatures();
+		//ActionListIf::InitializeSignatures();
 	}
 
-	ActionListIf::ActionListIf(const std::string& name) : ActionList(name)
+	ActionListIf::ActionListIf(const std::string& name) : ActionList(TypeIdInstance(), name)
 	{
-		ActionListIf::InitializeSignatures();
+		//ActionListIf::InitializeSignatures();
 	}
 
 	ActionListIf::ActionListIf(const ActionListIf& rhs) : ActionList(rhs)
 	{
-		ActionListIf::UpdateExternalStorage();
+		//ActionListIf::UpdateExternalStorage();
 	}
 
 	ActionListIf::ActionListIf(ActionListIf&& rhs) : ActionList(std::move(rhs))
 	{
-		ActionListIf::UpdateExternalStorage();
+		//ActionListIf::UpdateExternalStorage();
 	}
 
 	ActionListIf::~ActionListIf()
@@ -37,7 +37,7 @@ namespace FieaGameEngine
 		{
 			ActionList::operator=(rhs);
 			ConditionValue = rhs.ConditionValue;
-			UpdateExternalStorage();
+			//UpdateExternalStorage();
 		}
 		return *this;
 	}
@@ -48,7 +48,7 @@ namespace FieaGameEngine
 		{
 			ActionList::operator=(std::move(rhs));
 			ConditionValue = std::move(rhs.ConditionValue);
-			UpdateExternalStorage();
+			//UpdateExternalStorage();
 		}
 		return *this;
 	}
@@ -118,6 +118,17 @@ namespace FieaGameEngine
 		{
 			evaluationBlock.Set(&evaluationAction, 0);
 		}
+	}
+
+	Vector<Signature> ActionListIf::GetSignature()
+	{
+		Vector<Signature> signature = ActionList::GetSignature();
+		signature.PushBack(Signature("ConditionValue", Datum::DatumType::Integer, offsetof(ActionListIf, ConditionValue), 1));
+		signature.PushBack(Signature("ThenBlock", Datum::DatumType::Table, 1, 1));
+		signature.PushBack(Signature("ElseBlock", Datum::DatumType::Table, 1, 1));
+		signature.PushBack(Signature("Evaluation", Datum::DatumType::Table, 1, 1));
+
+		return signature;
 	}
 
 	void ActionListIf::InitializeSignatures()

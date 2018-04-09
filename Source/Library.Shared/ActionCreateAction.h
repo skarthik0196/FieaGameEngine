@@ -76,6 +76,8 @@ namespace FieaGameEngine
 		/// <param name="worldState">Worldstate reference</param>
 		void Update(WorldState& worldState);
 
+		static Vector<Signature> GetSignature();
+
 	private:
 		void InitializeSignatures();
 		void UpdateExternalStorage();

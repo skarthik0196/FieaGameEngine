@@ -10,24 +10,24 @@ namespace FieaGameEngine
 {
 	RTTI_DEFINITIONS(Sector)
 
-	Sector::Sector() : Attributed()
+	Sector::Sector() : Attributed(TypeIdInstance())
 	{
-		InitializeSignatures();
+		//InitializeSignatures();
 	}
 
-	Sector::Sector(const std::string& name) : Attributed(), Name(name)
+	Sector::Sector(const std::string& name) : Attributed(TypeIdInstance()), Name(name)
 	{
-		InitializeSignatures();
+		//InitializeSignatures();
 	}
 
 	Sector::Sector(const Sector& rhs) : Attributed(rhs), Name(rhs.Name)
 	{
-		UpdateExternalStorage();
+		//UpdateExternalStorage();
 	}
 
 	Sector::Sector(Sector&& rhs) : Attributed(std::move(rhs)), Name(std::move(rhs.Name))
 	{
-		UpdateExternalStorage();
+		//UpdateExternalStorage();
 	}
 
 	Sector::~Sector()
@@ -41,7 +41,7 @@ namespace FieaGameEngine
 		{
 			Attributed::operator=(rhs);
 			Name = rhs.Name;
-			UpdateExternalStorage();
+			//UpdateExternalStorage();
 		}
 
 		return *this;
@@ -53,7 +53,7 @@ namespace FieaGameEngine
 		{
 			Attributed::operator=(std::move(rhs));
 			Name = std::move(rhs.Name);
-			UpdateExternalStorage();
+			//UpdateExternalStorage();
 		}
 
 		return *this;
@@ -105,6 +105,15 @@ namespace FieaGameEngine
 	Datum& Sector::GetEntities()
 	{
 		return (*this)["Entities"];
+	}
+
+	Vector<Signature> Sector::GetSignature()
+	{
+		Vector<Signature> signature;
+		signature.PushBack(Signature("Name", Datum::DatumType::String, offsetof(Sector, Name), 1));
+		signature.PushBack(Signature("Entities", Datum::DatumType::Table, offsetof(Sector, Name), 1));
+
+		return signature;
 	}
 
 	void Sector::InitializeSignatures()

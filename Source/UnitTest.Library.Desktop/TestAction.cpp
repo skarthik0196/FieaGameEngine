@@ -6,7 +6,7 @@ using namespace FieaGameEngine;
 
 RTTI_DEFINITIONS(TestAction)
 
-TestAction::TestAction() : Action()
+TestAction::TestAction() : Action(TypeIdInstance())
 {
 
 }
@@ -14,6 +14,11 @@ TestAction::TestAction() : Action()
 TestAction::~TestAction()
 {
 
+}
+
+Vector<Signature> TestAction::GetSignature()
+{
+	return Action::GetSignature();
 }
 
 void TestAction::Update(FieaGameEngine::WorldState & worldState)

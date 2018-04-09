@@ -19,9 +19,6 @@ namespace UnitTestLibraryDesktop
 {
 	TEST_CLASS(AttributeTest)
 	{
-	private:
-		Attributed A;
-		AttributedFoo AF;
 	public:
 		static _CrtMemState sStartMemState;
 		/// <summary>
@@ -29,6 +26,8 @@ namespace UnitTestLibraryDesktop
 		/// </summary>
 		TEST_METHOD_INITIALIZE(Initialize)
 		{
+			TypeManager::RegisterType(AttributedFoo::TypeIdClass(), AttributedFoo::GetSignature());
+
 #ifdef _DEBUG
 			_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF);
 			_CrtMemCheckpoint(&sStartMemState);
@@ -39,6 +38,8 @@ namespace UnitTestLibraryDesktop
 		/// </summary>
 		TEST_METHOD_CLEANUP(Cleanup)
 		{
+			
+
 #ifdef _DEBUG
 			_CrtMemState endMemState, diffMemState;
 			_CrtMemCheckpoint(&endMemState);
@@ -84,15 +85,19 @@ namespace UnitTestLibraryDesktop
 		TEST_METHOD(AttributedFooInitialization)
 		{
 			AttributedFoo A1;
-			Assert::AreEqual(true, A1.IsPrescribedAttribute("Health"));
-			Assert::AreEqual(true, A1.IsPrescribedAttribute("Powers"));
+
+			Assert::AreEqual(true, A1.IsPrescribedAttribute("E1"));
+			Assert::AreEqual(true, A1.IsPrescribedAttribute("E2"));
+
 			AttributedFoo A2;
 			A2.AppendAuxillaryAttribute("Convoluted") = 42;
 			Assert::AreEqual(true, A2.IsAuxillaryAttribute("Convoluted"));
 
-			Assert::AreEqual(100, A1["Health"].Get<int32_t>(0));
-			Assert::AreEqual(0.5f, A1["FireRate"].Get<float>(0));
-			Assert::AreEqual(std::string("N/A"), A1["Powers"].Get<std::string>(0));
+			A1["E1"] = 100;
+
+			Assert::AreEqual(100, A1.GetE1());
+			/*Assert::AreEqual(0.5f, A1["FireRate"].Get<float>(0));
+			Assert::AreEqual(std::string("N/A"), A1["Powers"].Get<std::string>(0));*/
 		}
 
 		TEST_METHOD(AddAuxillaryAttributes)
@@ -127,12 +132,12 @@ namespace UnitTestLibraryDesktop
 			Assert::AreEqual(ExternalAuxillaryStorage, A1.Find("External")->Get<float>(0));
 
 			Vector<std::string> AttributesVector = A1.GetAttributes();
-			Vector<std::string> PrescribedAttributesVector = A1.GetPrescribedAttributes();
+			Vector<Signature> PrescribedAttributesVector = A1.GetPrescribedAttributes();
 			Vector<std::string> AuxillaryAttributesVector = A1.GetAuxillaryAttributes();
 
-			Assert::AreEqual(24U, AttributesVector.Length());
-			Assert::AreEqual(3U, AuxillaryAttributesVector.Length());
-			Assert::AreEqual(21U, PrescribedAttributesVector.Length());
+			Assert::AreEqual(16U, AttributesVector.Length());
+			Assert::AreEqual(4U, AuxillaryAttributesVector.Length());
+			Assert::AreEqual(12U, PrescribedAttributesVector.Length());
 		}
 
 		TEST_METHOD(CopyConstructor)
@@ -141,8 +146,11 @@ namespace UnitTestLibraryDesktop
 			A1.ContrivedValueChangingFunction();
 			AttributedFoo A2(A1);
 			Assert::IsTrue(A2["E1"] == A1["E1"]);
-
+			Assert::IsFalse(&A2["E1"].Get<int32_t>(0) == &A1["E1"].Get<int32_t>(0));
 			Assert::IsTrue(A1 == A2);
+
+			A2["E1"] = 4;
+			Assert::IsFalse(A2["E1"].Get<int32_t>() == A1["E1"].Get<int32_t>());
 		}
 
 		TEST_METHOD(OperatorAssignment)
@@ -159,8 +167,8 @@ namespace UnitTestLibraryDesktop
 			A1.ContrivedValueChangingFunction();
 			AttributedFoo A2(std::move(A1));
 
-			Assert::AreEqual(true, A2.IsPrescribedAttribute("Health"));
-			Assert::AreEqual(true, A2.IsPrescribedAttribute("Powers"));
+			Assert::AreEqual(true, A2.IsPrescribedAttribute("E1"));
+			Assert::AreEqual(true, A2.IsPrescribedAttribute("E2"));
 
 			AttributedFoo A3;
 			AttributedFoo A4;
@@ -170,7 +178,7 @@ namespace UnitTestLibraryDesktop
 		TEST_METHOD(ExceptionTesting)
 		{
 			AttributedFoo A1;
-			std::function<void()> Expression = [&A1]() {A1.AppendAuxillaryAttribute("Health"); };
+			std::function<void()> Expression = [&A1]() {A1.AppendAuxillaryAttribute("E1"); };
 			Assert::ExpectException<std::exception>(Expression);
 		}
 	};

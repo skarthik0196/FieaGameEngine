@@ -66,6 +66,8 @@ namespace FieaGameEngine
 		/// <param name="rpn">String containing new RPN</param>
 		void SetRPN(const std::string& rpn);
 
+		static Vector<Signature> GetSignature();
+
 	private:
 
 		enum class Operations

@@ -35,16 +35,6 @@ namespace UnitTestLibraryDesktop
 {
 	TEST_CLASS(ActionTests)
 	{
-	private:
-		World ContrivedWorld;
-		Sector ContrivedSector;
-		Entity ContrivedEntity;
-		TestEntity ContrivedTestEntity;
-		ActionList List1;
-		ActionListIf If1;
-		ActionExpression XX;
-		ActionDestroyAction ContrivedDestroyAction;
-		ActionCreateAction ContrivedCreateAction;
 	public:
 		static _CrtMemState sStartMemState;
 		/// <summary>
@@ -52,6 +42,29 @@ namespace UnitTestLibraryDesktop
 		/// </summary>
 		TEST_METHOD_INITIALIZE(Initialize)
 		{
+
+			TypeManager::RegisterType(World::TypeIdClass(), World::GetSignature());
+			TypeManager::RegisterType(Sector::TypeIdClass(), Sector::GetSignature());
+			TypeManager::RegisterType(Entity::TypeIdClass(), Entity::GetSignature());
+			TypeManager::RegisterType(TestEntity::TypeIdClass(), TestEntity::GetSignature());
+			TypeManager::RegisterType(Action::TypeIdClass(), Action::GetSignature());
+			TypeManager::RegisterType(ActionList::TypeIdClass(), ActionList::GetSignature());
+			TypeManager::RegisterType(ActionListIf::TypeIdClass(), ActionListIf::GetSignature());
+			TypeManager::RegisterType(ActionExpression::TypeIdClass(), ActionExpression::GetSignature());
+			TypeManager::RegisterType(ActionDestroyAction::TypeIdClass(), ActionDestroyAction::GetSignature());
+			TypeManager::RegisterType(ActionCreateAction::TypeIdClass(), ActionCreateAction::GetSignature());
+			TypeManager::RegisterType(TestAction::TypeIdClass(), TestAction::GetSignature());
+
+			//World ContrivedWorld;
+			//Sector ContrivedSector;
+			//Entity ContrivedEntity;
+			//TestEntity ContrivedTestEntity;
+			//ActionList List1;
+			//ActionListIf If1;
+			//ActionExpression XX;
+			//ActionDestroyAction ContrivedDestroyAction;
+			//ActionCreateAction ContrivedCreateAction;
+
 #ifdef _DEBUG
 			_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF);
 			_CrtMemCheckpoint(&sStartMemState);
@@ -180,7 +193,7 @@ namespace UnitTestLibraryDesktop
 			Master1.AddHelper(ActionHelper);
 
 			Master1.ParseFromFile("Scripts/ActionParseTest.json"s);
-
+			Assert::AreEqual(2U, E1->GetActions().Length());
 			W1.Update();
 
 			Assert::AreEqual("EE"s, E1->GetName());

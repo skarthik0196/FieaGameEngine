@@ -1,5 +1,7 @@
 #pragma once
 #include"Attributed.h"
+#include"TypeManager.h"
+#include"Vector.h"
 
 class AttributedFoo : public FieaGameEngine::Attributed
 {
@@ -20,6 +22,10 @@ public:
 	void ContrivedValueChangingFunction();
 
 	void UpdateExternalStorage();
+
+	const int32_t& GetE1() const;
+
+	static FieaGameEngine::Vector<FieaGameEngine::Signature> GetSignature();
 
 private:
 	void InitializeSignatures();

@@ -73,6 +73,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)EventQueue.cpp">
       <Filter>EngineMantle\Events</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)TypeManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Library.Desktop\targetver.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)EventQueue.h">
       <Filter>EngineMantle\Events</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)TypeManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Vector.inl">

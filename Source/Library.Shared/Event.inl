@@ -38,6 +38,7 @@ namespace FieaGameEngine
 		{
 			EventPublisher::operator=(rhs);
 			Payload = rhs.Payload;
+			SetSubscriberList(Subscribers);
 		}
 		return *this;
 	}
@@ -49,6 +50,7 @@ namespace FieaGameEngine
 		{
 			EventPublisher::operator=(std::move(rhs));
 			Payload = std::move(rhs.Payload);
+			SetSubscriberList(Subscribers);
 		}
 		return *this;
 	}
@@ -75,6 +77,12 @@ namespace FieaGameEngine
 	void Event<T>::ReserveSpace(const uint32_t& size)
 	{
 		Subscribers.reserve(size);
+	}
+
+	template<typename T>
+	inline void Event<T>::ShrinkToFitSubscriberList()
+	{
+		Subscribers.shrink_to_fit();
 	}
 
 	template<typename T>

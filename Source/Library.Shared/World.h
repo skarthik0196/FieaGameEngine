@@ -103,6 +103,8 @@ namespace FieaGameEngine
 
 		EventQueue& GetEventQueue();
 
+		static Vector<Signature> GetSignature();
+
 	private:
 		void InitializeSignatures();
 		void UpdateExternalStorage();

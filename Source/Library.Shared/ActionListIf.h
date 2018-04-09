@@ -78,6 +78,8 @@ namespace FieaGameEngine
 		void Update(WorldState& worldState);
 
 		void SetEvaluationBlock(Action& evaluationAction);
+
+		static Vector<Signature> GetSignature();
 			
 	private:
 		void InitializeSignatures();
