@@ -19,6 +19,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Action.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ActionCreateAction.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ActionDestroyAction.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ActionEvent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ActionExpression.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ActionList.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ActionListIf.h" />
@@ -40,6 +41,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)JsonParseMaster.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)json\json-forwards.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)json\json.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Reaction.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)EventMessageAttributed.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ReactionAttributed.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)RTTI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Scope.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Sector.h" />
@@ -67,6 +71,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Action.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)ActionCreateAction.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)ActionDestroyAction.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ActionEvent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)ActionExpression.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)ActionList.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)ActionListIf.cpp" />
@@ -78,6 +83,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)GameTime.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Graveyard.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)JsonParseHelperAction.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Reaction.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)EventMessageAttributed.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ReactionAttributed.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Sector.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)TypeManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)World.cpp" />

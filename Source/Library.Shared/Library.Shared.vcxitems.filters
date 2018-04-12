@@ -74,6 +74,12 @@
       <Filter>EngineMantle\Events</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)TypeManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Reaction.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)EventMessageAttributed.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ReactionAttributed.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ActionEvent.cpp">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Library.Desktop\targetver.h" />
@@ -177,6 +183,12 @@
       <Filter>EngineMantle\Events</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)TypeManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Reaction.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)EventMessageAttributed.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ReactionAttributed.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ActionEvent.h">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Vector.inl">

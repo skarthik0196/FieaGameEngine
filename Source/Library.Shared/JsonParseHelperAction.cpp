@@ -4,6 +4,9 @@
 #include "AbstractFactory.h"
 #include "ConcreteFactory.h"
 #include "ActionListIf.h"
+#include "Sector.h"
+#include "World.h"
+#include "Reaction.h"
 
 namespace FieaGameEngine
 {
@@ -44,12 +47,13 @@ namespace FieaGameEngine
 	bool JsonParseHelperAction::StartElementHandler(JsonParseMaster::SharedData& sharedData, std::string& name, Json::Value& values)
 	{
 
-		static void(JsonParseHelperAction::*InnerDataPointer[5])(std::string&, Json::Value&, JsonParseHelperAction::EntitySharedData&) = 
+		static void(JsonParseHelperAction::*InnerDataPointer[6])(std::string&, Json::Value&, JsonParseHelperAction::EntitySharedData&) = 
 		{
 		 &JsonParseHelperAction::InnerActionParse,
 		 &JsonParseHelperAction::InnerIfParse,
 		 &JsonParseHelperAction::EmptyFunction,
 		 &JsonParseHelperAction::EmptyFunction,
+		 &JsonParseHelperAction::InnerActionListParse,
 		 &JsonParseHelperAction::InnerActionListParse
 		};
 
@@ -128,7 +132,7 @@ namespace FieaGameEngine
 			}
 			else
 			{
-				if (!CustomSharedData->CurrentAction->GetParent()->Is("Entity"))
+				if ((CustomSharedData->CurrentAction->GetParent() != nullptr) && (!CustomSharedData->CurrentAction->GetParent()->Is("Entity")))
 				{
 					CustomSharedData->CurrentAction = static_cast<Action*>(CustomSharedData->CurrentAction->GetParent());
 					ActionTypeStack.pop();
@@ -167,10 +171,23 @@ namespace FieaGameEngine
 		{
 			ParsingAction = ActionTypes::None;
 		}
+
+		if (className.find("Reaction") != std::string::npos)
+		{
+			customSharedData.CurrentAction = customSharedData.SharedEntity->GetSector()->GetWorld()->CreateReaction(className);
+			if (customSharedData.CurrentAction == nullptr)
+			{
+				customSharedData.CurrentAction = customSharedData.SharedEntity->GetSector()->GetWorld()->CreateReaction("ReactionAttributed");
+			}
+
+			ParsingAction = ActionTypes::Reaction;
+		}
+		else
+		{
+			customSharedData.CurrentAction = customSharedData.SharedEntity->CreateAction(className, instanceName);
+		}
+
 		ActionTypeStack.push(ParsingAction);
-
-		customSharedData.CurrentAction = customSharedData.SharedEntity->CreateAction(className, instanceName);
-
 		values;
 	}
 
@@ -385,7 +402,8 @@ namespace FieaGameEngine
 																									{"ActionListIf", JsonParseHelperAction::ActionTypes::ActionListIf}, 
 																									{"ActionExpression", JsonParseHelperAction::ActionTypes::ActionExpression},
 																									{"TestAction",  JsonParseHelperAction::ActionTypes::TestAction},
-																									{"ActionList", JsonParseHelperAction::ActionTypes::ActionList}
+																									{"ActionList", JsonParseHelperAction::ActionTypes::ActionList},
+																									{"Reaction", JsonParseHelperAction::ActionTypes::Reaction}
 																									};
 
 	HashMap<std::string, Datum::DatumType> JsonParseHelperAction::StringTypeMap = { { "Integer", Datum::DatumType::Integer },{ "Float", Datum::DatumType::Float },{ "String", Datum::DatumType::String },{ "Vector4", Datum::DatumType::Vector4 },{ "Matrix4x4", Datum::DatumType::Matrix4x4 } };

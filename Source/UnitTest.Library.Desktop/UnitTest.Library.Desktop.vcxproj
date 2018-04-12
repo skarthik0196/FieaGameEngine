@@ -212,6 +212,7 @@ Xcopy  /e /y  "$(SolutionDir)..\External\Scripts" "$(OutDir)Scripts"</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ReactionTests.cpp" />
     <ClCompile Include="ScopeTest.cpp" />
     <ClCompile Include="SListTest.cpp" />
     <ClCompile Include="TestAction.cpp" />
@@ -224,6 +225,7 @@ Xcopy  /e /y  "$(SolutionDir)..\External\Scripts" "$(OutDir)Scripts"</Command>
   <ItemGroup>
     <None Include="..\..\External\Scripts\ActionParseTest.json" />
     <None Include="..\..\External\Scripts\EntityParseTest.json" />
+    <None Include="..\..\External\Scripts\ReactionParse.json" />
     <None Include="..\..\External\Scripts\Test.json" />
     <None Include="packages.config" />
   </ItemGroup>

@@ -114,6 +114,11 @@ namespace FieaGameEngine
 		return signature;
 	}
 
+	Scope* Sector::Clone() const
+	{
+		return (new Sector());
+	}
+
 	void Sector::InitializeSignatures()
 	{
 		AddExternalAttribute("Name", &Name, 1);

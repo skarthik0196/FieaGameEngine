@@ -111,6 +111,7 @@ namespace FieaGameEngine
 			ActionExpression,
 			TestAction,
 			ActionList,
+			Reaction,
 			NA,
 		};
 

@@ -114,6 +114,11 @@ namespace FieaGameEngine
 		UNREFERENCED_PARAMETER(event);
 	}
 
+	Scope * Entity::Clone() const
+	{
+		return (new Entity());
+	}
+
 	Vector<Signature> Entity::GetSignature()
 	{
 		Vector<Signature> signatures;

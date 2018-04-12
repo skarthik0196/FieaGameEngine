@@ -73,7 +73,8 @@ namespace FieaGameEngine
 				{
 					for (uint32_t i = 0; i < value->second.Length(); ++i)
 					{
-						Scope *temp = new Scope(*(value->second.Get<Scope*>(i)));
+						Scope *temp = value->second.Get<Scope*>(i)->Clone();
+						*temp = *(value->second.Get<Scope*>(i));
 						Adopt(*temp, value->first);
 					}
 				}
@@ -356,6 +357,11 @@ namespace FieaGameEngine
 				}
 			}
 		}
+	}
+
+	Scope* Scope::Clone() const
+	{
+		return (new Scope());
 	}
 
 	std::string Scope::ToString() const

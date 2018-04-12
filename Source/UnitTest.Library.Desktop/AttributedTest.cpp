@@ -136,7 +136,7 @@ namespace UnitTestLibraryDesktop
 			Vector<std::string> AuxillaryAttributesVector = A1.GetAuxillaryAttributes();
 
 			Assert::AreEqual(16U, AttributesVector.Length());
-			Assert::AreEqual(4U, AuxillaryAttributesVector.Length());
+			Assert::AreEqual(3U, AuxillaryAttributesVector.Length());
 			Assert::AreEqual(12U, PrescribedAttributesVector.Length());
 		}
 

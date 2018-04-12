@@ -14,6 +14,7 @@ namespace FieaGameEngine
 {
 	class Sector;
 	class Entity;
+	class Reaction;
 
 	/// <summary>
 	/// World class that derives from Attributed
@@ -104,6 +105,12 @@ namespace FieaGameEngine
 		EventQueue& GetEventQueue();
 
 		static Vector<Signature> GetSignature();
+
+		Reaction* CreateReaction(const std::string& reactionClass);
+
+		Datum& GetReactions();
+
+		virtual Scope* Clone() const;
 
 	private:
 		void InitializeSignatures();

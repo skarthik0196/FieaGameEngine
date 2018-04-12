@@ -26,6 +26,7 @@
     <ClCompile Include="ActionTests.cpp" />
     <ClCompile Include="TestAction.cpp" />
     <ClCompile Include="EventTests.cpp" />
+    <ClCompile Include="ReactionTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="UnitTest.Library.Desktop.rc" />
@@ -39,6 +40,9 @@
       <Filter>Scripts</Filter>
     </None>
     <None Include="..\..\External\Scripts\ActionParseTest.json">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="..\..\External\Scripts\ReactionParse.json">
       <Filter>Scripts</Filter>
     </None>
   </ItemGroup>

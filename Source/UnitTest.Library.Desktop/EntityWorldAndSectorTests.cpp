@@ -239,7 +239,11 @@ namespace UnitTestLibraryDesktop
 			CreateConcreteFactory(Entity, Entity)
 
 			World W1;
+			Sector *WS1 = W1.CreateSector("WS1");
+			WS1;
 			World W2(W1);
+			Assert::IsTrue(W2.GetSectors().Get<Scope*>(0)->Is(Sector::TypeIdClass()));
+
 			World W3;
 			W3 = W2;
 

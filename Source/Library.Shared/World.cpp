@@ -3,6 +3,9 @@
 #include "Sector.h"
 #include "Entity.h"
 #include "Graveyard.h"
+#include "Reaction.h"
+#include "AbstractFactory.h"
+#include "ConcreteFactory.h"
 #include<cassert>
 
 namespace FieaGameEngine
@@ -110,6 +113,26 @@ namespace FieaGameEngine
 		signature.PushBack(Signature("Sectors", Datum::DatumType::Table, offsetof(World, Name), 1));
 
 		return signature;
+	}
+
+	Reaction* World::CreateReaction(const std::string & reactionClass)
+	{
+		Reaction *newReaction = AbstractFactory<Reaction>::Create(reactionClass);
+		if (newReaction != nullptr)
+		{
+			Adopt(*newReaction, "Reactions");
+		}
+		return newReaction;
+	}
+
+	Datum & World::GetReactions()
+	{
+		return (*this)["Reactions"];
+	}
+
+	Scope* World::Clone() const
+	{
+		return (new World());
 	}
 
 	void World::InitializeSignatures()

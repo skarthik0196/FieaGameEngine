@@ -95,6 +95,8 @@ namespace FieaGameEngine
 
 		void Notify(EventPublisher* event);
 
+		Scope* Clone() const;
+
 		static Vector<Signature> GetSignature();
 
 	protected:

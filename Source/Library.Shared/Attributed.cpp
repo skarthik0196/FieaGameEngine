@@ -355,7 +355,7 @@ namespace FieaGameEngine
 
 		uint32_t prescribedSize =TypeManager::GetSignatures(TypeIdInstance()).Length();
 
-		for (uint32_t i = prescribedSize; i < orderedVector.Length(); ++i)
+		for (uint32_t i = prescribedSize + 1; i < orderedVector.Length(); ++i)
 		{
 			temp.PushBack(orderedVector[i]->first);
 		}

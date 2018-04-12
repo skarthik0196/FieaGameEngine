@@ -102,6 +102,8 @@ namespace FieaGameEngine
 		Datum& GetEntities();
 
 		static Vector<Signature> GetSignature();
+
+		virtual Scope* Clone() const;
 		
 
 	private:

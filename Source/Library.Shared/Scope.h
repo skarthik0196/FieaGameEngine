@@ -153,6 +153,8 @@ namespace FieaGameEngine
 		/// <param name="child">The adress of the Child to be orphaned</param>
 		void Orphan(Scope *child);
 
+		virtual Scope* Clone() const;
+
 	protected:
 		const Vector<std::pair<std::string, Datum>*>& GetOrderedVector() const;
 
