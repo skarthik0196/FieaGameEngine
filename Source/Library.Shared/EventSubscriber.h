@@ -5,9 +5,8 @@ namespace FieaGameEngine
 {
 	class EventPublisher;
 
-	class EventSubscriber : public RTTI
+	class EventSubscriber
 	{
-		RTTI_DECLARATIONS(EventSubscriber, RTTI)
 	public:
 		/// <summary>
 		/// Defaulted constructors
