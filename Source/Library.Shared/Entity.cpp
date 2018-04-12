@@ -13,13 +13,11 @@ namespace FieaGameEngine
 
 	Entity::Entity() : Attributed(TypeIdInstance())
 	{
-		//InitializeSignatures();
 	}
 
 
 	Entity::Entity(const uint64_t& runtimeTypeID) : Attributed(runtimeTypeID)
 	{
-
 	}
 
 	Entity::Entity(const uint64_t & runtimeTypeID, const std::string & name) : Attributed(runtimeTypeID), Name(name)
@@ -28,17 +26,14 @@ namespace FieaGameEngine
 
 	Entity::Entity(const std::string& name) :Attributed(TypeIdInstance()), Name(name)
 	{
-		//InitializeSignatures();
 	}
 
 	Entity::Entity(const Entity& rhs) : Attributed(rhs), Name(rhs.Name)
 	{
-		//UpdateExternalStorage();
 	}
 
 	Entity::Entity(Entity&& rhs) : Attributed(std::move(rhs)), Name(std::move(rhs.Name))
 	{
-		//UpdateExternalStorage();
 	}
 
 	Entity& Entity::operator=(const Entity& rhs)
@@ -47,7 +42,6 @@ namespace FieaGameEngine
 		{
 			Attributed::operator=(rhs);
 			Name = rhs.Name;
-			//UpdateExternalStorage();
 		}
 		return *this;
 	}
@@ -58,7 +52,6 @@ namespace FieaGameEngine
 		{
 			Attributed::operator=(std::move(rhs));
 			Name = std::move(rhs.Name);
-			//UpdateExternalStorage();
 		}
 		return *this;
 	}

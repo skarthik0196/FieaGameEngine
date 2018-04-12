@@ -14,7 +14,7 @@ namespace FieaGameEngine
 	{
 	}
 
-	void EventPublisher::SetTime(const std::chrono::high_resolution_clock::time_point& enqueuedTime, const std::chrono::seconds& delay)
+	void EventPublisher::SetTime(const std::chrono::high_resolution_clock::time_point& enqueuedTime, const std::chrono::milliseconds& delay)
 	{
 		EnqueuedTime = enqueuedTime;
 		Delay = delay;
@@ -25,7 +25,7 @@ namespace FieaGameEngine
 		return EnqueuedTime;
 	}
 
-	const std::chrono::seconds& EventPublisher::GetDelay() const
+	const std::chrono::milliseconds& EventPublisher::GetDelay() const
 	{
 		return Delay;
 	}

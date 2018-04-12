@@ -64,8 +64,11 @@ namespace FieaGameEngine
 	Action* ActionList::CreateAction(const std::string& className, const std::string& instanceName)
 	{
 		Action* newAction = AbstractFactory<Action>::Create(className);
-		newAction->SetName(instanceName);
-		AppendAction(*newAction);
+		if (newAction != nullptr)
+		{
+			newAction->SetName(instanceName);
+			AppendAction(*newAction);
+		}
 
 		return newAction;
 	}

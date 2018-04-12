@@ -74,8 +74,9 @@ void TestEntity::Update(WorldState& worldState)
 
 void TestEntity::Notify(EventPublisher* event)
 {
-	event;
-	Event <World>* trueEvent = event->As<Event<World>>();
+	assert(event->Is(Event<World>::TypeIdClass()));
+	Event <World>* trueEvent = static_cast<Event<World>*>(event);
+
 	auto PayLoad = trueEvent->Message();
 
 	SetName("Event Recieved");

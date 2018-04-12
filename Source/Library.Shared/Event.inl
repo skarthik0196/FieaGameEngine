@@ -14,15 +14,15 @@ namespace FieaGameEngine
 	}
 
 	template<typename T>
-	Event<T>::Event(const Event& rhs) : EventPublisher(rhs), Payload(rhs.Payload), Subscribers(rhs.Subscribers)
+	Event<T>::Event(const Event<T>& rhs) : EventPublisher(rhs), Payload(rhs.Payload)
 	{
-		SetSubscriberList(Subscribers);
+		
 	}
 
 	template<typename T>
-	Event<T>::Event(Event&& rhs) : EventPublisher(std:move(rhs)), Payload(std::move(rhs.Payload)), Subscribers(std::move(rhs.Subscribers))
+	Event<T>::Event(Event && rhs) : EventPublisher(std:: move(rhs)), Payload(std::move(rhs.Payload))
 	{
-		SetSubscriberList(Subscribers);
+
 	}
 
 	template<typename T>
@@ -38,7 +38,6 @@ namespace FieaGameEngine
 		{
 			EventPublisher::operator=(rhs);
 			Payload = rhs.Payload;
-			SetSubscriberList(Subscribers);
 		}
 		return *this;
 	}
@@ -50,7 +49,6 @@ namespace FieaGameEngine
 		{
 			EventPublisher::operator=(std::move(rhs));
 			Payload = std::move(rhs.Payload);
-			SetSubscriberList(Subscribers);
 		}
 		return *this;
 	}
@@ -64,7 +62,7 @@ namespace FieaGameEngine
 	template<typename T>
 	void Event<T>::Unsubscribe(EventSubscriber& subscriber)
 	{
-		Subscribers.remove(&subscriber);
+		Subscribers.erase(std::find(Subscribers.begin(), Subscribers.end(), &subscriber));
 	}
 
 	template<typename T>

@@ -11,22 +11,22 @@ namespace FieaGameEngine
 
 	World::World() : Attributed(TypeIdInstance())
 	{
-		//InitializeSignatures();
+
 	}
 
 	World::World(const std::string& name) : Attributed(TypeIdInstance()), Name(name)
 	{
-		//InitializeSignatures();
+
 	}
 
 	World::World(const World& rhs) : Attributed(rhs), Name(rhs.Name)
 	{
-		//UpdateExternalStorage();
+
 	}
 
 	World::World(World&& rhs) : Attributed(std::move(rhs)), Name(std::move(rhs.Name))
 	{
-		//UpdateExternalStorage();
+
 	}
 
 	World::~World()
@@ -40,7 +40,6 @@ namespace FieaGameEngine
 		{
 			Attributed::operator=(rhs);
 			Name = rhs.Name;
-			//UpdateExternalStorage();
 		}
 		return *this;
 	 }
@@ -51,7 +50,6 @@ namespace FieaGameEngine
 		{
 			Attributed::operator=(std::move(rhs));
 			Name = std::move(rhs.Name);
-			//UpdateExternalStorage();
 		}
 
 		return *this;

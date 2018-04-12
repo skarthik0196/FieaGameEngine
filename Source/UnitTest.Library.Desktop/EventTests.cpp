@@ -107,6 +107,8 @@ namespace UnitTestLibraryDesktop
 			TestEntity *TE1 = static_cast<TestEntity*>(S1->CreateEntity("TestEntity", "E1"));
 
 			Event<World>::Subscribe(*TE1);
+			Event<World>::Unsubscribe(*TE1);
+			Event<World>::Subscribe(*TE1);
 			Event<World>::UnsubscribeAll();
 
 			W1.Update();
@@ -118,6 +120,8 @@ namespace UnitTestLibraryDesktop
 
 		TEST_METHOD(Enqueue)
 		{
+			GameTime ContrivedGTime;
+
 			CreateConcreteFactory(TestEntity, Entity);
 
 			World W1("W1");
@@ -128,13 +132,16 @@ namespace UnitTestLibraryDesktop
 			std::shared_ptr<Event<World>> Event2 = std::make_shared<Event<World>>(W1);
 			std::shared_ptr<Event<World>> Event3 = std::make_shared<Event<World>>(W1);
 			std::shared_ptr<Event<World>> Event4 = std::make_shared<Event<World>>(W1);
-			
+
 			W1.Update();
 
 			W1.GetEventQueue().Enqueue(Event1, W1.GetWorldState().GetGameTime(), std::chrono::seconds(10));
 			W1.GetEventQueue().Enqueue(Event2, W1.GetWorldState().GetGameTime(), std::chrono::seconds(100));
 			W1.GetEventQueue().Enqueue(Event3, W1.GetWorldState().GetGameTime(), std::chrono::seconds(100));
 			W1.GetEventQueue().Enqueue(Event4, W1.GetWorldState().GetGameTime(), std::chrono::seconds(100));
+
+			Assert::IsTrue(std::chrono::duration_cast<std::chrono::seconds>(Event1->GetDelay()) == std::chrono::seconds(10));
+			Assert::IsTrue(Event1->GetTimeEnqueued() == W1.GetWorldState().GetGameTime().CurrentTime());
 
 			Event<World>::Subscribe(*TE1);
 
@@ -144,11 +151,14 @@ namespace UnitTestLibraryDesktop
 			Assert::AreEqual(4U, W1.GetEventQueue().Length());
 
 			auto endTime = std::chrono::high_resolution_clock::now() + std::chrono::seconds(11);
+			ContrivedGTime.SetCurrentTime(endTime);
 
-			while (W1.GetWorldState().GetGameTime().CurrentTime() < endTime)
+			/*while (W1.GetWorldState().GetGameTime().CurrentTime() < endTime)
 			{
 				W1.Update();
-			}
+			}*/
+
+			W1.GetEventQueue().Update(ContrivedGTime);
 
 			Assert::AreEqual("Event Recieved"s, TE1->GetName());
 			Assert::AreEqual(3U, W1.GetEventQueue().Length());
@@ -194,6 +204,50 @@ namespace UnitTestLibraryDesktop
 
 			Assert::AreEqual("Event Recieved"s, TE1->GetName());
 			Assert::AreEqual(3U, W1.GetEventQueue().Length());
+
+			Event<World>::UnsubscribeAll();
+			Event<World>::ShrinkToFitSubscriberList();
+
+			AbstractFactory<Entity>::ClearFactories();
+		}
+
+		TEST_METHOD(CopyMoveSemantics)
+		{
+			CreateConcreteFactory(TestEntity, Entity);
+
+			World W1("W1");
+			Sector *S1 = W1.CreateSector("S1");
+			TestEntity *TE1 = static_cast<TestEntity*>(S1->CreateEntity("TestEntity", "E1"));
+
+			std::shared_ptr<Event<World>> Event1 = std::make_shared<Event<World>>(W1);
+			std::shared_ptr<Event<World>> Event2 = std::make_shared<Event<World>>(*Event1);
+			std::shared_ptr<Event<World>> Event3 = std::make_shared<Event<World>>(W1);
+			std::shared_ptr<Event<World>> Event4 = std::make_shared<Event<World>>(W1);
+
+			*Event2 = *Event1;
+
+			W1.Update();
+
+			W1.GetEventQueue().Enqueue(Event1, W1.GetWorldState().GetGameTime(), std::chrono::seconds(10));
+			W1.GetEventQueue().Enqueue(Event2, W1.GetWorldState().GetGameTime(), std::chrono::seconds(100));
+			W1.GetEventQueue().Enqueue(Event3, W1.GetWorldState().GetGameTime(), std::chrono::seconds(100));
+			W1.GetEventQueue().Enqueue(Event4, W1.GetWorldState().GetGameTime(), std::chrono::seconds(100));
+
+			Event<World>::Subscribe(*TE1);
+
+			W1.Update();
+
+			Assert::AreNotEqual("Event Recieved"s, W1.GetName());
+			Assert::AreEqual(4U, W1.GetEventQueue().Length());
+
+			W1.GetEventQueue().Send(Event3);
+
+			Assert::AreEqual("Event Recieved"s, TE1->GetName());
+			Assert::AreEqual(3U, W1.GetEventQueue().Length());
+
+			*Event3 = std::move(*Event1);
+			Event<World> Event5(std::move(*Event3));
+			Event5;
 
 			Event<World>::UnsubscribeAll();
 			Event<World>::ShrinkToFitSubscriberList();

@@ -4,7 +4,7 @@
 
 namespace FieaGameEngine
 {
-	void FieaGameEngine::EventQueue::Enqueue(std::shared_ptr<EventPublisher> event, GameTime& gTime, const std::chrono::seconds& delay)
+	void FieaGameEngine::EventQueue::Enqueue(std::shared_ptr<EventPublisher> event, GameTime& gTime, const std::chrono::milliseconds& delay)
 	{
 		event->SetTime(gTime.CurrentTime(), delay);
 		Queue.push_back(event);

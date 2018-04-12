@@ -257,7 +257,7 @@ namespace FieaGameEngine
 		/// Get All prescribed attributes in the underlying scope
 		/// </summary>
 		/// <returns>A vector contatining all prescribed attributes</returns>
-		Vector<Signature/*std::string*/> GetPrescribedAttributes() const;
+		Vector<Signature> GetPrescribedAttributes() const;
 
 		/// <summary>
 		/// Get all Auxillary attributes in the underlying scope

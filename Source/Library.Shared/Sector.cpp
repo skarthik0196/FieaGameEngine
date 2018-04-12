@@ -12,22 +12,22 @@ namespace FieaGameEngine
 
 	Sector::Sector() : Attributed(TypeIdInstance())
 	{
-		//InitializeSignatures();
+
 	}
 
 	Sector::Sector(const std::string& name) : Attributed(TypeIdInstance()), Name(name)
 	{
-		//InitializeSignatures();
+
 	}
 
 	Sector::Sector(const Sector& rhs) : Attributed(rhs), Name(rhs.Name)
 	{
-		//UpdateExternalStorage();
+
 	}
 
 	Sector::Sector(Sector&& rhs) : Attributed(std::move(rhs)), Name(std::move(rhs.Name))
 	{
-		//UpdateExternalStorage();
+
 	}
 
 	Sector::~Sector()
@@ -41,7 +41,6 @@ namespace FieaGameEngine
 		{
 			Attributed::operator=(rhs);
 			Name = rhs.Name;
-			//UpdateExternalStorage();
 		}
 
 		return *this;
@@ -53,7 +52,6 @@ namespace FieaGameEngine
 		{
 			Attributed::operator=(std::move(rhs));
 			Name = std::move(rhs.Name);
-			//UpdateExternalStorage();
 		}
 
 		return *this;

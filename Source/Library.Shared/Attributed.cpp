@@ -9,7 +9,6 @@ namespace FieaGameEngine
 
 	Attributed::Attributed()
 	{
-		//AddInternalAttribute("this", this, 1);
 		Datum &datum = Append("this");
 		datum.PushBack(static_cast<RTTI*>(this));
 	}
@@ -20,12 +19,6 @@ namespace FieaGameEngine
 		datum.PushBack(static_cast<RTTI*>(this));
 
 		Populate(runtimeTypeID);
-
-		/*Attributed* FirstEntryPointer = (*FirstEntry.Insert(std::make_pair(runtimeTypeID, this))).second;
-		if (FirstEntryPointer == this)
-		{
-			PrescribedAttributes[runtimeTypeID].PushBack("this");
-		}*/
 	}
 
 
@@ -103,16 +96,6 @@ namespace FieaGameEngine
 	bool Attributed::IsPrescribedAttribute(const std::string& name) const
 	{
 		bool Result = false;
-
-		/*HashMap<uint64_t, Vector<std::string>>::Iterator It = PrescribedAttributes.Find(TypeIdInstance());
-		if (It != PrescribedAttributes.end())
-		{
-			Vector<std::string>::Iterator VIt = (*It).second.Find(name);
-			if (VIt != (*It).second.end())
-			{
-				Result = true;
-			}
-		}*/
 
 		Vector<Signature> signatures = TypeManager::GetSignatures(TypeIdInstance());
 		Vector<Signature>::Iterator It = signatures.begin();
@@ -360,26 +343,11 @@ namespace FieaGameEngine
 		return temp;
 	}
 
-	//Do Hashmap Finds
 	Vector<Signature> Attributed::GetPrescribedAttributes() const
 	{
-		/*const Vector<std::pair<std::string, Datum>*>& orderedVector = GetOrderedVector();
-		Vector<std::string> temp;
-
-		Vector<std::string>& prescribedKeyList = PrescribedAttributes[TypeIdInstance()];
-		for (auto& value : orderedVector)
-		{
-			if (prescribedKeyList.Find(value->first) != prescribedKeyList.end())
-			{
-				temp.PushBack(value->first);
-			}
-		}*/
-
 		return TypeManager::GetSignatures(TypeIdInstance());
 	}
-
-	// Prescribed Attributes +1
-	// 
+ 
 	Vector<std::string> Attributed::GetAuxillaryAttributes() const
 	{
 		const Vector<std::pair<std::string, Datum>*>& orderedVector = GetOrderedVector();
@@ -391,15 +359,6 @@ namespace FieaGameEngine
 		{
 			temp.PushBack(orderedVector[i]->first);
 		}
-
-		/*Vector<std::string>& prescribedKeyList = PrescribedAttributes[TypeIdInstance()];
-		for (auto& value : orderedVector)
-		{
-			if (prescribedKeyList.Find(value->first) == prescribedKeyList.end())
-			{
-				temp.PushBack(value->first);
-			}
-		}*/
 
 		return temp;
 	}

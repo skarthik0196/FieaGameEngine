@@ -17,7 +17,7 @@ namespace FieaGameEngine
 		EventQueue& operator=(const EventQueue& rhs) = default;
 		EventQueue& operator=(EventQueue&& rhs) = default;
 
-		void Enqueue(std::shared_ptr<EventPublisher> event, GameTime& gTime, const std::chrono::seconds& delay);
+		void Enqueue(std::shared_ptr<EventPublisher> event, GameTime& gTime, const std::chrono::milliseconds& delay);
 
 		void Update(GameTime& gTime);
 

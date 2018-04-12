@@ -3,5 +3,5 @@
 
 namespace FieaGameEngine
 {
-	//RTTI_DEFINITIONS(EventSubscriber)
+	RTTI_DEFINITIONS(EventSubscriber)
 }
