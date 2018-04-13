@@ -73,11 +73,19 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)EventQueue.cpp">
       <Filter>EngineMantle\Events</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)TypeManager.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Reaction.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)EventMessageAttributed.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)ReactionAttributed.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)ActionEvent.cpp">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)TypeManager.cpp">
+      <Filter>EngineCore</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)EventMessageAttributed.cpp">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Reaction.cpp">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)ReactionAttributed.cpp">
       <Filter>EngineMantle\Actions</Filter>
     </ClCompile>
   </ItemGroup>
@@ -182,11 +190,19 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)EventQueue.h">
       <Filter>EngineMantle\Events</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)TypeManager.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Reaction.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)EventMessageAttributed.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)ReactionAttributed.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ActionEvent.h">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)TypeManager.h">
+      <Filter>EngineCore</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)EventMessageAttributed.h">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Reaction.h">
+      <Filter>EngineMantle\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ReactionAttributed.h">
       <Filter>EngineMantle\Actions</Filter>
     </ClInclude>
   </ItemGroup>

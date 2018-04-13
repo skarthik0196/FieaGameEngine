@@ -147,6 +147,11 @@ namespace UnitTestLibraryDesktop
 			Entity *E1 = W1.CreateSector("S1"s)->CreateEntity("Entity"s, "E1"s);
 			ActionEvent *A1 = E1->CreateAction("ActionEvent"s, "A1"s)->As<ActionEvent>();
 			A1->AppendAuxillaryAttribute("Aux1"s) = 3;
+
+			Datum& d = A1->AppendAuxillaryAttribute("Aux2"s);
+			d.SetType(Datum::DatumType::Table); 
+			d.PushBack(new Scope());
+
 			A1->SetDelay(std::chrono::milliseconds(0));
 			A1->SetSubType("Integer"s);
 
@@ -190,9 +195,8 @@ namespace UnitTestLibraryDesktop
 
 			Master1.ParseFromFile(FileName);
 
-			ActionEvent *A1 = E1->CreateAction("ActionEvent"s, "A1"s)->As<ActionEvent>();
-			A1->SetDelay(std::chrono::milliseconds(0));
-			A1->SetSubType("Integer"s);
+			ActionEvent *A1 = E1->GetActions().Get<Scope*>(0)->As<ActionEvent>();
+			Assert::IsTrue(A1->GetParent() == E1);
 
 			W1.Update();
 
@@ -208,7 +212,6 @@ namespace UnitTestLibraryDesktop
 			AbstractFactory<Reaction>::ClearFactories();
 			AbstractFactory<Action>::ClearFactories();
 		}
-
 	};
 	_CrtMemState ReactionTests::sStartMemState;
 }

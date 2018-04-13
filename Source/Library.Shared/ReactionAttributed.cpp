@@ -61,7 +61,21 @@ namespace FieaGameEngine
 		{
 			for (std::string& value : message.GetAuxillaryAttributes())
 			{
-				AppendAuxillaryAttribute(value) = message[value];
+				Datum& datum = message[value];
+				if (datum.GetType() == Datum::DatumType::Table)
+				{
+					Datum& tableDatum = AppendAuxillaryAttribute(value);
+					tableDatum.SetType(Datum::DatumType::Table);
+					for (uint32_t i = 0; i < datum.Length(); ++i)
+					{
+						Scope *newScope = new Scope(*datum.Get<Scope*>(i));
+						tableDatum.PushBack(newScope);
+					}
+				}
+				else
+				{
+					AppendAuxillaryAttribute(value) = (*this)[value];
+				}
 			}
 
 			ActionList::Update((message.GetWorld())->GetWorldState());

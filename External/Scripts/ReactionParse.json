@@ -1,29 +1,38 @@
 {
-  "Reaction1__ReactionAttributed": 
-  {
-    "If1__ActionListIf": 
-    {
-      "then__ActionExpression": 
-      {
-        "RPN__ActionExpression": 
-        {
+  "Reaction1__ReactionAttributed": {
+    "If1__ActionListIf": {
+      "then__ActionExpression": {
+        "RPN__ActionExpression": {
           "type": "String",
           "size": 1,
           "value": "1 1 +"
         }
       },
-      "ConditionValue": 
-      {
+      "ConditionValue": {
         "type": "Integer",
         "size": 1,
         "value": 1
       }
     },
+    "SubType": {
+      "type": "String",
+      "size": 1,
+      "value": "Integer"
+    }
+  },
+  "A1__ActionEvent":
+  {
     "SubType": 
     {
       "type": "String",
       "size": 1,
       "value": "Integer"
+    },
+    "Delay": 
+    {
+      "type": "Integer",
+      "size": 1,
+      "value": 0
     }
   }
 }

@@ -23,7 +23,21 @@ namespace FieaGameEngine
 
 		for (auto& value : GetAuxillaryAttributes())
 		{
-			message.AppendAuxillaryAttribute(value) = message[value];
+			Datum& datum = (*this)[value];
+			if (datum.GetType() == Datum::DatumType::Table)
+			{
+				Datum& tableDatum = message.AppendAuxillaryAttribute(value);
+				tableDatum.SetType(Datum::DatumType::Table);
+				for (uint32_t i = 0; i < datum.Length(); ++i)
+				{
+					Scope *newScope = new Scope(*datum.Get<Scope*>(i));
+					tableDatum.PushBack(newScope);
+				}
+			}
+			else
+			{
+				message.AppendAuxillaryAttribute(value) = (*this)[value];
+			}
 		}
 
 		std::shared_ptr<Event<EventMessageAttributed>> event = std::make_shared<Event<EventMessageAttributed>>(message);
