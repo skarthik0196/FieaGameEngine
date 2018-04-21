@@ -8,7 +8,7 @@ namespace FieaGameEngine
 	RTTI_DEFINITIONS(Event<T>)
 
 	template<typename T>
-	Event<T>::Event(T& payload) : EventPublisher(&Subscribers), Payload(payload)
+	Event<T>::Event(T& payload) : EventPublisher(&Subscribers, Mutex), Payload(payload)
 	{
 
 	}
@@ -56,13 +56,19 @@ namespace FieaGameEngine
 	template<typename T>
 	void Event<T>::Subscribe(EventSubscriber& subscriber)
 	{
+		std::lock_guard<std::mutex> lock(Mutex);
 		Subscribers.push_back(&subscriber);
 	}
 
 	template<typename T>
 	void Event<T>::Unsubscribe(EventSubscriber& subscriber)
 	{
-		Subscribers.erase(std::find(Subscribers.begin(), Subscribers.end(), &subscriber));
+		std::lock_guard<std::mutex> lock(Mutex);
+		auto It = (std::find(Subscribers.begin(), Subscribers.end(), &subscriber));
+		if (It != Subscribers.end())
+		{
+			Subscribers.erase(It);
+		}
 	}
 
 	template<typename T>
@@ -90,5 +96,20 @@ namespace FieaGameEngine
 	}
 
 	template<typename T>
+	inline uint32_t Event<T>::SubscriberLength()
+	{
+		return static_cast<uint32_t>(Subscribers.size());
+	}
+
+	template<typename T>
+	inline std::mutex& Event<T>::GetMutex()
+	{
+		return Mutex;
+	}
+
+	template<typename T>
 	std::vector<EventSubscriber*> Event<T>::Subscribers;
+
+	template<typename T>
+	std::mutex Event<T>::Mutex;
 }

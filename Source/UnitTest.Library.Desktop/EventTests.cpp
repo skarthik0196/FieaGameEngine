@@ -7,6 +7,7 @@
 #include <crtdbg.h>
 #include <exception>
 #include <functional>
+#include <random>
 #include <fstream>
 #include "Entity.h"
 #include "Sector.h"
@@ -251,6 +252,72 @@ namespace UnitTestLibraryDesktop
 
 			Event<World>::UnsubscribeAll();
 			Event<World>::ShrinkToFitSubscriberList();
+
+			AbstractFactory<Entity>::ClearFactories();
+		}
+
+		TEST_METHOD(ThreadedStressTesting)
+		{
+			CreateConcreteFactory(TestEntity, Entity);
+
+			std::default_random_engine randomEngine;
+			std::uniform_int_distribution<int32_t> delayDistribution(8, 15);
+
+			World W1("W1");
+			Sector *S1 = W1.CreateSector("S1");
+			TestEntity *TE1 = static_cast<TestEntity*>(S1->CreateEntity("TestEntity", "E1"));
+			TestEntity *TE2 = static_cast<TestEntity*>(S1->CreateEntity("TestEntity", "E2"));
+			TestEntity *TE3 = static_cast<TestEntity*>(S1->CreateEntity("TestEntity", "E3"));
+
+			Event<int>::Subscribe(*TE1);
+			Event<float>::Subscribe(*TE2);
+			Event<char>::Subscribe(*TE3);
+
+			W1.Update();
+			int x = 4;
+			float y = 5;
+			char z = 'A';
+
+			for (int i = 0; i < 500; ++i)
+			{
+				W1.GetEventQueue().Enqueue(std::make_shared<Event<int>>(x), W1.GetWorldState().GetGameTime(), std::chrono::milliseconds(delayDistribution(randomEngine)));
+				W1.GetEventQueue().Enqueue(std::make_shared<Event<float>>(y), W1.GetWorldState().GetGameTime(), std::chrono::milliseconds(delayDistribution(randomEngine)));
+				W1.GetEventQueue().Enqueue(std::make_shared<Event<char>>(z), W1.GetWorldState().GetGameTime(), std::chrono::milliseconds(delayDistribution(randomEngine)));
+			}
+
+			Assert::AreEqual(1500U, W1.GetEventQueue().Length());
+
+			GameTime contrivedGameTime;
+			auto endTime = W1.GetWorldState().GetGameTime().CurrentTime() + std::chrono::milliseconds(10);
+			contrivedGameTime.SetCurrentTime(endTime);
+
+			W1.GetEventQueue().Update(contrivedGameTime);
+
+			endTime += std::chrono::milliseconds(6);
+
+			W1.GetEventQueue().Update(contrivedGameTime);
+
+			contrivedGameTime.SetCurrentTime(endTime);
+			W1.GetEventQueue().Update(contrivedGameTime);
+
+			Assert::AreEqual(0U, Event<char>::SubscriberLength());
+
+			Assert::AreEqual(500, (*TE1)["EventCount"].Get<int32_t>());
+
+			W1.Update();
+
+			Assert::AreEqual(1000, (*TE2)["EventCount"].Get<int32_t>());
+
+			Assert::AreEqual(0U, W1.GetEventQueue().Length());
+
+			Event<int>::UnsubscribeAll();
+			Event<int>::ShrinkToFitSubscriberList();
+
+			Event<float>::UnsubscribeAll();
+			Event<float>::ShrinkToFitSubscriberList();
+
+			Event<char>::UnsubscribeAll();
+			Event<char>::ShrinkToFitSubscriberList();
 
 			AbstractFactory<Entity>::ClearFactories();
 		}

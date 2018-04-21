@@ -1,52 +1,71 @@
 #include "pch.h"
 #include "EventQueue.h"
 #include <algorithm>
+#include<future>
 
 namespace FieaGameEngine
 {
 	void FieaGameEngine::EventQueue::Enqueue(std::shared_ptr<EventPublisher> event, GameTime& gTime, const std::chrono::milliseconds& delay)
 	{
+		std::lock_guard<std::mutex> lock(Mutex);
 		event->SetTime(gTime.CurrentTime(), delay);
-		Queue.push_back(event);
+		NonExpiredQueue.push_back(event);
+		//Queue.push_back(event);
 	}
 
 	void FieaGameEngine::EventQueue::Update(GameTime& gTime)
 	{
-		if (Queue.size() > 0)
+		if (NonExpiredQueue.size() > 0)
 		{
+			std::vector<std::future<void>> futures;
+			//std::lock_guard<std::mutex> lock(Mutex);
 			std::chrono::high_resolution_clock::time_point currentTime = gTime.CurrentTime();
-			auto partitionIterator = std::partition(Queue.begin(), Queue.end(), [&currentTime](std::shared_ptr<EventPublisher> event) {return event->isExpired(currentTime); });
+			auto partitionIterator = std::partition(NonExpiredQueue.begin(), NonExpiredQueue.end(), [&currentTime](std::shared_ptr<EventPublisher> event) {return event->isExpired(currentTime); });
+			std::move(NonExpiredQueue.begin(), partitionIterator, std::back_inserter(Queue));
+			NonExpiredQueue.erase(NonExpiredQueue.begin(), partitionIterator);
 
-			for (auto It = Queue.begin(); It != partitionIterator; ++It)
+			for (auto It = Queue.begin(); It != Queue.end(); ++It)
 			{
-				(*It)->Deliver();
+				futures.emplace_back(std::async(std::launch::async, [this, It]() {(*It)->Deliver(); }));
 			}
-			Queue.erase(Queue.begin(), partitionIterator);
+
+			for (auto& f : futures)
+			{
+				f.get();
+			}
+
+			Queue.erase(Queue.begin(), Queue.end());
 		}
 	}
 
 	void FieaGameEngine::EventQueue::Send(std::shared_ptr<EventPublisher> event)
 	{
-		auto It = std::find(Queue.begin(), Queue.end(), event);
-		if (It != Queue.end())
+		std::lock_guard < std::mutex> lock(Mutex);
+		auto It = std::find(NonExpiredQueue.begin(), NonExpiredQueue.end(), event);
+		if (It != NonExpiredQueue.end())
 		{
 			(*It)->Deliver();
-			Queue.erase(It);
+			NonExpiredQueue.erase(It);
 		}
 	}
 
 	void FieaGameEngine::EventQueue::Clear()
 	{
-		Queue.clear();
+		NonExpiredQueue.clear();
 	}
 
 	bool FieaGameEngine::EventQueue::IsEmpty() const
 	{
-		return Queue.empty();
+		return NonExpiredQueue.empty();
 	}
 
 	uint32_t FieaGameEngine::EventQueue::Length() const
 	{
-		return static_cast<uint32_t>(Queue.size());
+		return static_cast<uint32_t>(NonExpiredQueue.size());
+	}
+
+	std::mutex& EventQueue::GetMutex()
+	{
+		return Mutex;
 	}
 }

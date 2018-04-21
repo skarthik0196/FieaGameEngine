@@ -2,6 +2,9 @@
 #include "Entity.h"
 #include "EventSubscriber.h"
 #include "WorldState.h"
+#include <thread>
+#include <future>
+#include <mutex>
 
 class TestEntity : public FieaGameEngine::Entity
 {
@@ -27,6 +30,8 @@ private:
 	void InitializeSignatures();
 	void UpdateExternalStorage();
 	int32_t Health;
+	int32_t EventCount;
+	std::mutex Mutex;
 
 };
 

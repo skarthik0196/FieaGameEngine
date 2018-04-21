@@ -10,22 +10,22 @@ using namespace FieaGameEngine;
 
 RTTI_DEFINITIONS(TestEntity)
 
-TestEntity::TestEntity() : Entity(TypeIdInstance())
+TestEntity::TestEntity() : Entity(TypeIdInstance()), EventCount(0)
 {
 	//InitializeSignatures();
 }
 
-TestEntity::TestEntity(const std::string& name) : Entity(TypeIdInstance(), name)
+TestEntity::TestEntity(const std::string& name) : Entity(TypeIdInstance(), name), EventCount(0)
 {
 	//InitializeSignatures();
 }
 
-TestEntity::TestEntity(const TestEntity& rhs) : Entity(rhs), Health(rhs.Health)
+TestEntity::TestEntity(const TestEntity& rhs) : Entity(rhs), Health(rhs.Health), EventCount(0)
 {
 	//UpdateExternalStorage();
 }
 
-TestEntity::TestEntity(TestEntity&& rhs) : Health(std::move(rhs.Health))
+TestEntity::TestEntity(TestEntity&& rhs) : Health(std::move(rhs.Health)), EventCount(0)
 {
 	//UpdateExternalStorage();
 }
@@ -74,12 +74,38 @@ void TestEntity::Update(WorldState& worldState)
 
 void TestEntity::Notify(EventPublisher* event)
 {
-	assert(event->Is(Event<World>::TypeIdClass()));
-	Event <World>* trueEvent = static_cast<Event<World>*>(event);
+	std::lock_guard<std::mutex> lock(Mutex);
 
-	auto PayLoad = trueEvent->Message();
+	Event<World>* trueEventWorld = event->As<Event<World>>();
+	Event<int32_t>* trueEventInt = event->As<Event<int32_t>>();
+	Event<float>* trueEventFloat = event->As<Event<float>>();
+	Event<char>* trueEventChar = event->As<Event<char>>();
 
-	SetName("Event Recieved");
+	EventCount++;
+	trueEventInt;
+	trueEventFloat;
+	trueEventChar;
+
+	if (trueEventWorld != nullptr)
+	{
+		auto PayLoad = trueEventWorld->Message();
+		SetName("Event Recieved");
+		
+	}
+	else if (trueEventInt != nullptr)
+	{
+		World *ParentWorld = static_cast<World*>(GetParent()->GetParent());
+		float x = 3;
+		ParentWorld->GetEventQueue().Enqueue(std::make_shared<Event<float>>(x), ParentWorld->GetWorldState().GetGameTime(), std::chrono::milliseconds(0));
+	}
+	//else if (trueEventFloat != nullptr)
+	//{
+	//	EventCount++;
+	//}
+	else if (trueEventChar != nullptr)
+	{
+		Event<char>::Unsubscribe(*this);
+	}
 	
 }
 
@@ -88,6 +114,7 @@ Vector<Signature> TestEntity::GetSignature()
 	Vector<Signature> signature = Entity::GetSignature();
 
 	signature.PushBack(Signature("Health", Datum::DatumType::Integer, offsetof(TestEntity, Health), 1));
+	signature.PushBack(Signature("EventCount", Datum::DatumType::Integer, offsetof(TestEntity, EventCount), 1));
 
 	return signature;
 }

@@ -3,6 +3,9 @@
 #include <chrono>
 #include <memory>
 #include <vector>
+#include <mutex>
+#include <thread>
+#include <future>
 
 namespace FieaGameEngine
 {
@@ -51,14 +54,18 @@ namespace FieaGameEngine
 		/// </summary>
 		void Deliver();
 
+		virtual std::mutex& GetMutex();
+
 	protected:
-		explicit EventPublisher(std::vector<EventSubscriber*>* subscriberList);
+		explicit EventPublisher(std::vector<EventSubscriber*>* subscriberList, std::mutex& derivedMutex);
 
 		void SetSubscriberList(std::vector<EventSubscriber*>* subscriberList);
 
 	private:
 		std::chrono::milliseconds Delay{ 0 };
 		std::chrono::high_resolution_clock::time_point EnqueuedTime;
+
+		std::mutex* DerivedMutex;
 		std::vector<EventSubscriber*>* SubscriberList;
 	};
 }

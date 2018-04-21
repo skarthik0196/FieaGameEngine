@@ -2,11 +2,12 @@
 #include "EventPublisher.h"
 #include "EventSubscriber.h"
 
+
 namespace FieaGameEngine
 {
 	RTTI_DEFINITIONS(EventPublisher)
 
-	EventPublisher::EventPublisher(std::vector<EventSubscriber*>* subscriberList) : SubscriberList(subscriberList)
+	EventPublisher::EventPublisher(std::vector<EventSubscriber*>* subscriberList, std::mutex& derivedMutex) : SubscriberList(subscriberList), DerivedMutex(&derivedMutex)
 	{
 	}
 
@@ -37,10 +38,27 @@ namespace FieaGameEngine
 
 	void EventPublisher::Deliver()
 	{
-		for (auto& subscriber : *SubscriberList)
+		std::vector<std::future<void>> futures;
+
 		{
-			subscriber->Notify(this);
+			std::unique_lock<std::mutex> lock(*DerivedMutex);
+
+			for (auto& subscriber : *SubscriberList)
+			{
+				futures.emplace_back(std::async(std::launch::async, [this, subscriber]() {subscriber->Notify(this); }));;
+				//subscriber->Notify(this);
+			}
 		}
+		for (auto& f : futures)
+		{
+			
+			f.get();
+		}
+	}
+
+	std::mutex& EventPublisher::GetMutex()
+	{
+		return *DerivedMutex;
 	}
 
 	void EventPublisher::SetSubscriberList(std::vector<EventSubscriber*>* subscriberList)

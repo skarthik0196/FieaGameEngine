@@ -82,8 +82,14 @@ namespace FieaGameEngine
 		/// <returns>A T&</returns>
 		T& Message();
 
+		static uint32_t SubscriberLength();
+
+		static std::mutex& GetMutex();
+
 	private:
 		T Payload;
+
+		static std::mutex Mutex;
 
 		static std::vector<EventSubscriber*> Subscribers;
 	};

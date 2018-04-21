@@ -3,6 +3,9 @@
 #include "GameTime.h"
 #include <deque>
 #include<memory>
+#include<thread>
+#include<mutex>
+
 
 namespace FieaGameEngine
 {
@@ -29,8 +32,12 @@ namespace FieaGameEngine
 
 		uint32_t Length() const;
 
+		std::mutex& GetMutex();
+
 	private:
 		std::deque<std::shared_ptr<EventPublisher>> Queue;
+		std::deque<std::shared_ptr<EventPublisher>> NonExpiredQueue;
+		mutable std::mutex Mutex;
 	};
 }
 
