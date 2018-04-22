@@ -29,10 +29,9 @@ int WINAPI WinMain(HINSTANCE CurrentInstance, HINSTANCE PreviousInstance, LPSTR 
 	std::wstring WindowClassName = L"Game.DirectX";
 
 	InitializeWindow(CurrentInstance, WindowClassName, L"Game.DirectX", ShowCommand);
-	
-	Renderer *DXRenderer= new Renderer();
-	
-	DXRenderer->InitializeD3D(WindowHandle, ClientWidth, ClientHeight);
+
+	Rendering::Renderer *D3DRenderer = new Rendering::Renderer(WindowHandle, ClientWidth, ClientHeight);
+	D3DRenderer->InitializeRenderer();
 
 	MSG Message;
 
@@ -44,17 +43,15 @@ int WINAPI WinMain(HINSTANCE CurrentInstance, HINSTANCE PreviousInstance, LPSTR 
 			DispatchMessage(&Message);
 			if (Message.message == WM_QUIT)
 			{
-				DXRenderer->ShutDownD3D();
+				//DXRenderer->ShutDownD3D();
 				break;
 			}
 		}
 		else
 		{
-			DXRenderer->RenderFrame();
+			D3DRenderer->RenderFrame();
 		}
 	}
-
-
 
 	return 0;
 	//return Message.wParam;

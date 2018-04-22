@@ -6,14 +6,31 @@
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RendererCore.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Program.cpp" />
-    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RendererCore.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{8cbb4914-a629-44a1-902c-512ed67bfb35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

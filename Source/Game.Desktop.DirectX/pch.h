@@ -10,6 +10,17 @@
 #include <stdio.h>
 #include <tchar.h>
 
+//Standard Headers
+#include <vector>
+#include <memory>
+#include <exception>
+
+//DX11
+#include <d3d11_4.h>
+#include <DirectXMath.h>
+#include <DirectXPackedVector.h>
+#include <d3dcompiler.h>
+
 
 
 // TODO: reference additional headers your program requires here

@@ -1,23 +1,30 @@
 #pragma once
 #include<Windows.h>
-#include<d3d11.h>
+#include "RendererCore.h"
 
 
-
-class Renderer
+namespace Rendering
 {
-public:
-	Renderer();
-	~Renderer();
+	class Renderer : public RendererCore
+	{
+	public:
+		Renderer();
+		Renderer(HWND windowHandle, int screenWidth, int screenHeight);
+		Renderer(HWND windowHandle);
+		Renderer(const Renderer& rhs) = default;
+		Renderer(Renderer&& rhs) = default;
+		virtual ~Renderer();
 
-	void InitializeD3D(HWND WindowHandle, int ScreenWidth, int ScreenHeight);
-	void ShutDownD3D();
-	void RenderFrame();
+		void InitializeRenderer();
 
-private:
-	IDXGISwapChain *SwapChain;
-	ID3D11Device *Device;
-	ID3D11DeviceContext *DeviceContext;
-	ID3D11RenderTargetView *RenderTargetView;
-};
+		void CreateViewPort();
 
+		void RenderFrame();
+
+	private:
+		uint32_t MipLevels;
+
+		std::vector<Microsoft::WRL::ComPtr<ID3D11RenderTargetView>> RenderTargetViews;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> DepthStencilView;
+	};
+}
