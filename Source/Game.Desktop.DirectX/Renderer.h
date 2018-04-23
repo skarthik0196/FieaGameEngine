@@ -1,7 +1,7 @@
 #pragma once
 #include<Windows.h>
 #include "RendererCore.h"
-
+#include "CameraBase.h"
 
 namespace Rendering
 {
@@ -21,10 +21,16 @@ namespace Rendering
 
 		void RenderFrame();
 
+		std::shared_ptr<CameraBase> GetMainCamera();
+
 	private:
+		void SetCameraResolution();
+
 		uint32_t MipLevels;
 
 		std::vector<Microsoft::WRL::ComPtr<ID3D11RenderTargetView>> RenderTargetViews;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> DepthStencilView;
+
+		std::shared_ptr<CameraBase> MainCamera;
 	};
 }

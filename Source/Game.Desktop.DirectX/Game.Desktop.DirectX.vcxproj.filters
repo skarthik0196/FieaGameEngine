@@ -13,6 +13,9 @@
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="CameraBase.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Material.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -24,6 +27,9 @@
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="CameraBase.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Material.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

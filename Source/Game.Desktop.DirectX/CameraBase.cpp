@@ -38,8 +38,150 @@ namespace Rendering
 		return Position;
 	}
 
+	void CameraBase::SetAngle(float angle)
+	{
+		Angle = angle;
+	}
+
+	float CameraBase::GetAngle() const
+	{
+		return Angle;
+	}
+
+	float CameraBase::GetScreenWidth()
+	{
+		return ScreenWidth;
+	}
+
+	void CameraBase::SetScreenWidth(float screenWidth)
+	{
+		ScreenWidth = screenWidth;
+	}
+
+	float CameraBase::GetScreenHeight()
+	{
+		return ScreenHeight;
+	}
+
+	void CameraBase::SetScreenHeight(float screenHeight)
+	{
+		ScreenHeight = screenHeight;
+	}
+
+	void CameraBase::SetNearPlane(float nearPlane)
+	{
+		NearPlane = nearPlane;
+	}
+
+	void CameraBase::SetFarPlane(float farPlane)
+	{
+		FarPlane = farPlane;
+	}
+
+	float CameraBase::GetNearPlane() const
+	{
+		return NearPlane;
+	}
+
+	float CameraBase::GetFarPlane() const
+	{
+		return FarPlane;
+	}
+
+	const DirectX::XMFLOAT4X4 & CameraBase::GetViewMatrixAsFloat4x4() const
+	{
+		return ViewMatrix;
+	}
+
+	DirectX::XMMATRIX CameraBase::GetViewMatrix() const
+	{
+		return DirectX::XMLoadFloat4x4(&ViewMatrix);
+	}
+
+	const DirectX::XMFLOAT4X4 & CameraBase::GetProjectionMatrixAsFloat4x4() const
+	{
+		return ProjectionMatrix;
+	}
+
+	DirectX::XMMATRIX CameraBase::GetProjectionMatrix() const
+	{
+		return DirectX::XMLoadFloat4x4(&ProjectionMatrix);
+	}
+
+	const DirectX::XMFLOAT4X4 & CameraBase::GetViewProjectionMatrixAsFloat4x4() const
+	{
+		return ViewProjectionMatrix;
+	}
+
+	DirectX::XMMATRIX CameraBase::GetViewProjectionMatrix() const
+	{
+		return DirectX::XMLoadFloat4x4(&ViewProjectionMatrix);
+	}
+
 	void CameraBase::InitializeViewMatrix()
 	{
 		DirectX::XMStoreFloat4x4(&ViewMatrix, DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&Position), DirectX::XMLoadFloat3(&Target), GetUpVector()));
+	}
+
+	void CameraBase::InitializePerspectiveProjectionMatrix()
+	{
+		DirectX::XMStoreFloat4x4(&ProjectionMatrix, DirectX::XMMatrixPerspectiveFovLH(Angle, ScreenWidth / ScreenHeight, NearPlane, FarPlane));
+
+		DirectX::XMStoreFloat4x4(&ViewProjectionMatrix, DirectX::XMLoadFloat4x4(&ViewMatrix) * DirectX::XMLoadFloat4x4(&ProjectionMatrix));
+	}
+
+	void CameraBase::Move(const DirectX::XMFLOAT3& translation)
+	{
+		DirectX::XMVECTOR temp = DirectX::XMLoadFloat3(&translation);
+		Move(temp);
+	}
+
+	void CameraBase::Move(const DirectX::XMVECTOR& translation)
+	{
+		DirectX::XMVECTOR temp = DirectX::XMLoadFloat3(&Position);
+		temp = DirectX::XMVector3Transform(temp, DirectX::XMMatrixTranslation(DirectX::XMVectorGetX(translation), DirectX::XMVectorGetY(translation), DirectX::XMVectorGetZ(translation)));
+		DirectX::XMStoreFloat3(&Position, temp);
+
+		temp = DirectX::XMVector3Transform(DirectX::XMLoadFloat3(&Target), DirectX::XMMatrixTranslation(DirectX::XMVectorGetX(translation), DirectX::XMVectorGetY(translation), DirectX::XMVectorGetZ(translation)));
+		DirectX::XMStoreFloat3(&Target, temp);
+
+		temp = DirectX::XMVector3Transform(DirectX::XMLoadFloat3(&UpVectorEndPoint), DirectX::XMMatrixTranslation(DirectX::XMVectorGetX(translation), DirectX::XMVectorGetY(translation), DirectX::XMVectorGetZ(translation)));
+		DirectX::XMStoreFloat3(&Position, temp);
+
+		InitializeViewMatrix();
+	}
+
+	void CameraBase::Rotate(const DirectX::XMFLOAT3& axis, float angleInDegrees)
+	{
+		DirectX::XMVECTOR temp = DirectX::XMLoadFloat3(&axis);
+		Rotate(temp, angleInDegrees);
+	}
+
+	void CameraBase::Rotate(const DirectX::XMVECTOR& axis, float angleInDegrees)
+	{
+		if ((DirectX::XMVector3Equal(DirectX::XMVectorZero(), axis)) || (angleInDegrees == 0.0f))
+		{
+			return;
+		}
+
+		DirectX::XMVECTOR targetLookAt =  DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&Target), DirectX::XMLoadFloat3(&Position));
+		DirectX::XMVECTOR upVectorLookAt = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&UpVectorEndPoint), DirectX::XMLoadFloat3(&Position));
+
+		DirectX::XMStoreFloat3(&Target, targetLookAt);
+		DirectX::XMStoreFloat3(&UpVectorEndPoint, upVectorLookAt);
+
+		InitializeViewMatrix();
+	}
+
+	void CameraBase::SetPosition(const DirectX::XMFLOAT3& position)
+	{
+		DirectX::XMVECTOR temp = DirectX::XMLoadFloat3(&position);
+		SetPosition(temp);
+	}
+
+	void CameraBase::SetPosition(const DirectX::XMVECTOR& position)
+	{
+		DirectX::XMVECTOR moveVector = DirectX::XMVectorSubtract(position, DirectX::XMLoadFloat3(&Position));
+		Move(position);
 	}
 }

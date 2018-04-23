@@ -23,7 +23,41 @@ namespace Rendering
 		DirectX::XMVECTOR GetPosition() const;
 		const DirectX::XMFLOAT3& GetPositionAsFloat3() const;
 
+		void SetAngle(float angle);
+		float GetAngle() const;
+
+		float GetScreenWidth();
+		void SetScreenWidth(float screenWidth);
+
+		float GetScreenHeight();
+		void SetScreenHeight(float screenHeight);
+
+		void SetNearPlane(float nearPlane);
+		void SetFarPlane(float farPlane);
+
+		float GetNearPlane() const;
+		float GetFarPlane() const;
+		
+		const DirectX::XMFLOAT4X4& GetViewMatrixAsFloat4x4() const;
+		DirectX::XMMATRIX GetViewMatrix() const;
+
+		const DirectX::XMFLOAT4X4& GetProjectionMatrixAsFloat4x4() const;
+		DirectX::XMMATRIX GetProjectionMatrix() const;
+
+		const DirectX::XMFLOAT4X4& GetViewProjectionMatrixAsFloat4x4() const;
+		DirectX::XMMATRIX GetViewProjectionMatrix() const;
+
 		void InitializeViewMatrix();
+		void InitializePerspectiveProjectionMatrix();
+
+		void Move(const DirectX::XMFLOAT3& translation);
+		void Move(const DirectX::XMVECTOR& translation);
+
+		void Rotate(const DirectX::XMFLOAT3& axis, float angleInDegrees);
+		void Rotate(const DirectX::XMVECTOR& axis, float angleInDegrees);
+
+		void SetPosition(const DirectX::XMFLOAT3& position);
+		void SetPosition(const DirectX::XMVECTOR& position);
 
 	private:
 		DirectX::XMFLOAT3 Position;

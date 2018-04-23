@@ -5,21 +5,36 @@
 
 namespace Rendering
 {
-	Renderer::Renderer() : RendererCore()
+	Renderer::Renderer() : RendererCore(), MainCamera(std::make_shared<CameraBase>())
 	{
+		SetCameraResolution();
 	}
 
-	Renderer::Renderer(HWND windowHandle, int screenWidth, int screenHeight) : RendererCore(windowHandle, screenWidth, screenHeight)
+	Renderer::Renderer(HWND windowHandle, int screenWidth, int screenHeight) : RendererCore(windowHandle, screenWidth, screenHeight), MainCamera(std::make_shared<CameraBase>())
 	{
+		SetCameraResolution();
 	}
 
-	Renderer::Renderer(HWND windowHandle) : RendererCore(windowHandle)
+	Renderer::Renderer(HWND windowHandle) : RendererCore(windowHandle), MainCamera(std::make_shared<CameraBase>())
 	{
+		SetCameraResolution();
 	}
 
 	Renderer::~Renderer()
 	{
 	}
+
+	void Renderer::SetCameraResolution()
+	{
+		MainCamera->SetScreenHeight(static_cast<float>(GetScreenHeight()));
+		MainCamera->SetScreenWidth(static_cast<float>(GetScreenWidth()));
+	}
+
+	std::shared_ptr<CameraBase> Renderer::GetMainCamera()
+	{
+		return MainCamera;
+	}
+
 	void Renderer::InitializeRenderer()
 	{
 		HRESULT result;
@@ -75,6 +90,6 @@ namespace Rendering
 		deviceContext->ClearDepthStencilView(DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		GetSwapChain()->Present(0,0);
-
 	}
+
 }
