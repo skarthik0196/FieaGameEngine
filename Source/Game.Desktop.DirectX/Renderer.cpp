@@ -71,7 +71,7 @@ namespace Rendering
 		result = GetDevice()->CreateRenderTargetView(backBuffer, nullptr, renderTargetView.GetAddressOf());
 		RenderTargetViews.push_back(renderTargetView);
 
-		GetDeviceContext()->OMSetRenderTargets(RenderTargetViews.size(), RenderTargetViews[0].GetAddressOf(), DepthStencilView.Get());
+		GetDeviceContext()->OMSetRenderTargets(static_cast<uint32_t>(RenderTargetViews.size()), RenderTargetViews[0].GetAddressOf(), DepthStencilView.Get());
 		CreateViewPort();
 
 		// Put the following Code in appropriate place later

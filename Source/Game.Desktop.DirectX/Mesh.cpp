@@ -130,7 +130,7 @@ namespace Rendering
 
 	uint32_t Mesh::GetIndexCount() const
 	{
-		return Indices.size();
+		return static_cast<uint32_t>(Indices.size());
 	}
 
 	const std::vector<uint32_t>& Mesh::GetIndices() const
@@ -145,7 +145,7 @@ namespace Rendering
 		ZeroMemory(&IndexBufferDescription, sizeof(IndexBufferDescription));
 
 		IndexBufferDescription.Usage = D3D11_USAGE_IMMUTABLE;
-		IndexBufferDescription.ByteWidth = sizeof(uint32_t) * Indices.size();
+		IndexBufferDescription.ByteWidth = sizeof(uint32_t) * static_cast<uint32_t>(Indices.size());
 		IndexBufferDescription.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
 		D3D11_SUBRESOURCE_DATA IndexSubResource;
@@ -171,7 +171,7 @@ namespace Rendering
 		ZeroMemory(&vertexBufferDescription, sizeof(vertexBufferDescription));
 
 		vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vertexBufferDescription.ByteWidth = sizeof(Vertex) * vertices.size();
+		vertexBufferDescription.ByteWidth = sizeof(Vertex) * static_cast<uint32_t>(vertices.size());
 		vertexBufferDescription.Usage = D3D11_USAGE_IMMUTABLE;
 
 		D3D11_SUBRESOURCE_DATA vertexSubresourceData = { 0 };
