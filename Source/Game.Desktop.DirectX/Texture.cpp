@@ -37,6 +37,11 @@ namespace Rendering
 		return ShaderResource.Get();
 	}
 
+	ID3D11ShaderResourceView ** Texture::GetAdddressOfShaderResource()
+	{
+		return ShaderResource.GetAddressOf();
+	}
+
 	const std::wstring& Texture::GetFilePath()
 	{
 		return Name;

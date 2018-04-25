@@ -51,6 +51,11 @@ namespace Rendering
 		ID3D11Buffer* GetIndexBuffer();
 		ID3D11Buffer* GetVertexBuffer();
 
+		ID3D11Buffer** GetAddressOfVertexBuffer();
+		ID3D11Buffer** GetAddressOfIndexBuffer();
+
+		std::shared_ptr<Material> GetMaterial() const;
+
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> IndexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> VertexBuffer;

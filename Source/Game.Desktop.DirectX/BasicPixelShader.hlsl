@@ -1,6 +1,17 @@
+Texture2D ColorTexture;
+SamplerState ColorSampler;
 
-
-float4 main() : SV_TARGET
+struct VS_OUTPUT
 {
-	return float4(1.0f, 1.0f, 1.0f, 1.0f);
+	float4 Position : SV_POSITION;
+	float2 TextureCoordinate : TEXTURECOORDINATE;
+};
+
+float4 main(VS_OUTPUT IN) : SV_TARGET
+{
+	float4 OutputColor = (float4)0;
+
+	OutputColor = ColorTexture.Sample(ColorSampler, IN.TextureCoordinate);
+
+	return OutputColor;
 }

@@ -191,6 +191,21 @@ namespace Rendering
 		return VertexBuffer.Get();
 	}
 
+	ID3D11Buffer ** Mesh::GetAddressOfVertexBuffer()
+	{
+		return VertexBuffer.GetAddressOf();
+	}
+
+	ID3D11Buffer ** Mesh::GetAddressOfIndexBuffer()
+	{
+		return IndexBuffer.GetAddressOf();
+	}
+
+	std::shared_ptr<Material> Mesh::GetMaterial() const
+	{
+		return MeshMaterial;
+	}
+
 	Vertex::Vertex(DirectX::XMFLOAT4 position, DirectX::XMFLOAT2 textureCoordinates, DirectX::XMFLOAT3 normals) :Position(position), TextureCoordinates(textureCoordinates), Normals(normals)
 	{
 

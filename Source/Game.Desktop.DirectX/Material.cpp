@@ -47,7 +47,7 @@ namespace Rendering
 	void Material::CreateTexture(ID3D11Device2* D3Ddevice, const std::wstring & filePath, Texture::TextureFileType fileType, Texture::TextureType textureType)
 	{
 		auto newTexture = std::make_shared<Texture>(filePath, fileType, textureType);
-		auto textureTypeVector = Textures[textureType];
+		auto& textureTypeVector = Textures[textureType];
 		textureTypeVector.push_back(newTexture);
 		newTexture->InitializeTexture(D3Ddevice);
 	}

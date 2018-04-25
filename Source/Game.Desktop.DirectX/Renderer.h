@@ -3,9 +3,11 @@
 #include "RendererCore.h"
 #include "CameraBase.h"
 
+
 namespace Rendering
 {
 	class Model;
+	class Shader;
 
 	class Renderer : public RendererCore
 	{
@@ -41,6 +43,13 @@ namespace Rendering
 		/// </summary>
 		
 		std::shared_ptr<Model> TestModel;
+		std::shared_ptr<Shader> VS;
+		std::shared_ptr<Shader> PS;
+		DirectX::XMFLOAT4X4 WorldMatrix;
+
+		Microsoft::WRL::ComPtr<ID3D11SamplerState> ColorSampler;
+		VertexCBufferPerObject VSCBuffer;
+		ID3D11Buffer* VSCBufferObject;
 
 	private:
 		void SetCameraResolution();

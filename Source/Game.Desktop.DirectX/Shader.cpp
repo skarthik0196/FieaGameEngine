@@ -61,22 +61,33 @@ namespace Rendering
 		return ComputeShader.Get();
 	}
 
+	ID3D11InputLayout* Shader::GetInputLayout()
+	{
+		return InputLayout.Get();
+	}
+
 	void Shader::InitializeShader(ID3D11Device2* D3Ddevice)
 	{
 		std::vector<char> shaderByteCode;
 		ReadShader(shaderByteCode);
 
-		static std::vector<std::function<void(ID3D11Device2*, std::vector<char>&)>> shaderCreator =
+		/*static std::vector<std::function<void(ID3D11Device2*, std::vector<char>&, Shader& shader)>> shaderCreator =
 		{
-			[this](ID3D11Device2* device, std::vector<char>& byteCode) {ID3D11VertexShader* VS = this->GetVertexShader(); device->CreateVertexShader(byteCode.data(), byteCode.size(), nullptr, &VS);},
-			[this](ID3D11Device2* device, std::vector<char>& byteCode) {ID3D11HullShader* HS = this->GetHullShader(); device->CreateHullShader(byteCode.data(), byteCode.size(), nullptr, &HS); },
-			[this](ID3D11Device2* device, std::vector<char>& byteCode) {ID3D11DomainShader* DS = this->GetDomainShader(); device->CreateDomainShader(byteCode.data(), byteCode.size(), nullptr, &DS); },
-			[this](ID3D11Device2* device, std::vector<char>& byteCode) {ID3D11GeometryShader* GS = this->GetGeometryShader(); device->CreateGeometryShader(byteCode.data(), byteCode.size(), nullptr, &GS); },
-			[this](ID3D11Device2* device, std::vector<char>& byteCode) {ID3D11PixelShader* PS = this->GetPixelShader(); device->CreatePixelShader(byteCode.data(), byteCode.size(), nullptr, &PS); },
-			[this](ID3D11Device2* device, std::vector<char>& byteCode) {ID3D11ComputeShader* CS = this->GetComputeShader(); device->CreateComputeShader(byteCode.data(), byteCode.size(), nullptr, &CS); }
-		};
+			[](ID3D11Device2* device, std::vector<char>& byteCode, Shader& shader) {ID3D11VertexShader* VS = shader.GetVertexShader(); device->CreateVertexShader(byteCode.data(), byteCode.size(), nullptr, &VS); },
+			[](ID3D11Device2* device, std::vector<char>& byteCode, Shader& shader) {ID3D11HullShader* HS = shader.GetHullShader(); device->CreateHullShader(byteCode.data(), byteCode.size(), nullptr, &HS); },
+			[](ID3D11Device2* device, std::vector<char>& byteCode, Shader& shader) {ID3D11DomainShader* DS = shader.GetDomainShader(); device->CreateDomainShader(byteCode.data(), byteCode.size(), nullptr, &DS); },
+			[](ID3D11Device2* device, std::vector<char>& byteCode, Shader& shader) {ID3D11GeometryShader* GS = shader.GetGeometryShader(); device->CreateGeometryShader(byteCode.data(), byteCode.size(), nullptr, &GS); },
+			[](ID3D11Device2* device, std::vector<char>& byteCode, Shader& shader) {ID3D11PixelShader* PS = shader.GetPixelShader(); device->CreatePixelShader(byteCode.data(), byteCode.size(), nullptr, &PS); },
+			[](ID3D11Device2* device, std::vector<char>& byteCode, Shader& shader) {ID3D11ComputeShader* CS = shader.GetComputeShader(); device->CreateComputeShader(byteCode.data(), byteCode.size(), nullptr, &CS); }
+		};*/
 
-		shaderCreator[static_cast<uint32_t>(Type)](D3Ddevice, shaderByteCode);
+		static void (Shader::*shaderCreator[6])(ID3D11Device2*, std::vector<char>&) = { &Shader::CreateVertexShader, &Shader::CreateHullShader, &Shader::CreateDomainShader, 
+																						&Shader::CreateGeometryShader, &Shader::CreatePixelShader, &Shader::CreateComputeShader };
+
+		(this->*shaderCreator[static_cast<uint32_t>(Type)])(D3Ddevice, shaderByteCode);
+
+		/*HRESULT res = D3Ddevice->CreateVertexShader(shaderByteCode.data(), shaderByteCode.size(), nullptr, VertexShader.GetAddressOf());
+		res;*/
 
 		if (Type == ShaderType::VertexShader)
 		{
@@ -103,12 +114,40 @@ namespace Rendering
 		file.seekg(0, std::ios::end);
 		size = static_cast<uint32_t>(file.tellg());
 
-		shaderData.reserve(size);
+		shaderData.resize(size);
 
 		file.seekg(0, std::ios::beg);
 		file.read(shaderData.data(), size);
 		file.close();
 	}
 
+	void Shader::CreateVertexShader(ID3D11Device2 * D3Ddevice, std::vector<char>& byteCode)
+	{
+		D3Ddevice->CreateVertexShader(byteCode.data(), byteCode.size(), nullptr, VertexShader.GetAddressOf());
+	}
 
+	void Shader::CreateHullShader(ID3D11Device2 * D3Ddevice, std::vector<char>& byteCode)
+	{
+		D3Ddevice->CreateHullShader(byteCode.data(), byteCode.size(), nullptr, HullShader.GetAddressOf());
+	}
+
+	void Shader::CreateDomainShader(ID3D11Device2 * D3Ddevice, std::vector<char>& byteCode)
+	{
+		D3Ddevice->CreateDomainShader(byteCode.data(), byteCode.size(), nullptr, DomainShader.GetAddressOf());
+	}
+
+	void Shader::CreateGeometryShader(ID3D11Device2 * D3Ddevice, std::vector<char>& byteCode)
+	{
+		D3Ddevice->CreateGeometryShader(byteCode.data(), byteCode.size(), nullptr, GeometryShader.GetAddressOf());
+	}
+
+	void Shader::CreatePixelShader(ID3D11Device2 * D3Ddevice, std::vector<char>& byteCode)
+	{
+		D3Ddevice->CreatePixelShader(byteCode.data(), byteCode.size(), nullptr, PixelShader.GetAddressOf());
+	}
+
+	void Shader::CreateComputeShader(ID3D11Device2 * D3Ddevice, std::vector<char>& byteCode)
+	{
+		D3Ddevice->CreateComputeShader(byteCode.data(), byteCode.size(), nullptr, ComputeShader.GetAddressOf());
+	}
 }

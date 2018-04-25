@@ -35,10 +35,19 @@ namespace Rendering
 		ID3D11PixelShader* GetPixelShader();
 		ID3D11ComputeShader* GetComputeShader();
 
+		ID3D11InputLayout* GetInputLayout();
+
 
 
 	private:
 		void ReadShader(std::vector<char>& shaderData);
+
+		void CreateVertexShader(ID3D11Device2* D3Ddevice, std::vector<char>& byteCode);
+		void CreateHullShader(ID3D11Device2* D3Ddevice, std::vector<char>& byteCode);
+		void CreateDomainShader(ID3D11Device2* D3Ddevice, std::vector<char>& byteCode);
+		void CreateGeometryShader(ID3D11Device2* D3Ddevice, std::vector<char>& byteCode);
+		void CreatePixelShader(ID3D11Device2* D3Ddevice, std::vector<char>& byteCode);
+		void CreateComputeShader(ID3D11Device2* D3Ddevice, std::vector<char>& byteCode);
 
 		ShaderType Type;
 

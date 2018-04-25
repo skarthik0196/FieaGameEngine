@@ -38,6 +38,7 @@ namespace Rendering
 		void SetTextureFileType(const TextureFileType& textureFileType);
 
 		ID3D11ShaderResourceView* GetShaderResouce();
+		ID3D11ShaderResourceView** GetAdddressOfShaderResource();
 
 		const std::wstring& GetFilePath();
 		void SetFilePath(const std::wstring& FilePath);
