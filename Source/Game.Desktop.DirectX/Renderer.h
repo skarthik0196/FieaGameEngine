@@ -5,8 +5,20 @@
 
 namespace Rendering
 {
+	class Model;
+
 	class Renderer : public RendererCore
 	{
+
+	struct VertexCBufferPerObject
+	{
+		DirectX::XMFLOAT4X4 WorldViewProjectionMatrix;
+		DirectX::XMFLOAT4X4 WorldMatrix;
+
+		VertexCBufferPerObject();
+		VertexCBufferPerObject(const DirectX::XMFLOAT4X4& WVP, const DirectX::XMFLOAT4X4& worldMatrix);
+	};
+
 	public:
 		Renderer();
 		Renderer(HWND windowHandle, int screenWidth, int screenHeight);
@@ -22,6 +34,13 @@ namespace Rendering
 		void RenderFrame();
 
 		std::shared_ptr<CameraBase> GetMainCamera();
+
+
+		/// <summary>
+		/// Temporary Stuff, needs to be moved out.
+		/// </summary>
+		
+		std::shared_ptr<Model> TestModel;
 
 	private:
 		void SetCameraResolution();

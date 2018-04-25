@@ -13,6 +13,7 @@
 //Standard Headers
 #include <vector>
 #include <memory>
+#include <string>
 #include <exception>
 
 //DX11

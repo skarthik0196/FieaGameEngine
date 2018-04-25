@@ -3,13 +3,14 @@
 
 namespace Rendering
 {
-	CameraBase::CameraBase(float nearPlane, float farPlane ) : NearPlane(nearPlane), FarPlane(farPlane), Position(DirectX::XMFLOAT3(0.0f,0.0f,0.0f)), Target(DirectX::XMFLOAT3(0.0f,0.0f,1.0f)), Angle(0.0f), ScreenWidth(1024), ScreenHeight(768)
+	CameraBase::CameraBase(float nearPlane, float farPlane ) : NearPlane(nearPlane), FarPlane(farPlane), Position(DirectX::XMFLOAT3(0.0f,0.0f,0.0f)), Target(DirectX::XMFLOAT3(0.0f,0.0f,1.0f)), Angle(1.0f), ScreenWidth(1024), ScreenHeight(768)
 	{
 		DirectX::XMFLOAT3 temp(0.0f, 1.0f, 0.0f);
 		DirectX::XMVECTOR upVector = DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&Position), DirectX::XMLoadFloat3(&temp));
 		DirectX::XMStoreFloat3(&UpVectorEndPoint, upVector);
 		
 		InitializeViewMatrix();
+		InitializePerspectiveProjectionMatrix();
 	}
 
 	CameraBase::~CameraBase()
@@ -125,7 +126,7 @@ namespace Rendering
 
 	void CameraBase::InitializePerspectiveProjectionMatrix()
 	{
-		DirectX::XMStoreFloat4x4(&ProjectionMatrix, DirectX::XMMatrixPerspectiveFovLH(Angle, ScreenWidth / ScreenHeight, NearPlane, FarPlane));
+		DirectX::XMStoreFloat4x4(&ProjectionMatrix, DirectX::XMMatrixPerspectiveFovLH(Angle, (ScreenWidth / ScreenHeight), NearPlane, FarPlane));
 
 		DirectX::XMStoreFloat4x4(&ViewProjectionMatrix, DirectX::XMLoadFloat4x4(&ViewMatrix) * DirectX::XMLoadFloat4x4(&ProjectionMatrix));
 	}

@@ -2,6 +2,11 @@
 #include "pch.h"
 #include "Renderer.h"
 #include<DirectXPackedVector.h>
+#include "Model.h"
+#include "Mesh.h"
+#include "Material.h"
+#include "Texture.h"
+#include "Shader.h"
 
 namespace Rendering
 {
@@ -13,6 +18,7 @@ namespace Rendering
 	Renderer::Renderer(HWND windowHandle, int screenWidth, int screenHeight) : RendererCore(windowHandle, screenWidth, screenHeight), MainCamera(std::make_shared<CameraBase>())
 	{
 		SetCameraResolution();
+		TestModel = std::make_shared<Model>(GetDevice(), R"(Content\Models\Sphere.obj)", true);
 	}
 
 	Renderer::Renderer(HWND windowHandle) : RendererCore(windowHandle), MainCamera(std::make_shared<CameraBase>())
@@ -28,6 +34,7 @@ namespace Rendering
 	{
 		MainCamera->SetScreenHeight(static_cast<float>(GetScreenHeight()));
 		MainCamera->SetScreenWidth(static_cast<float>(GetScreenWidth()));
+		MainCamera->InitializePerspectiveProjectionMatrix();
 	}
 
 	std::shared_ptr<CameraBase> Renderer::GetMainCamera()
@@ -67,6 +74,11 @@ namespace Rendering
 
 		GetDeviceContext()->OMSetRenderTargets(RenderTargetViews.size(), RenderTargetViews[0].GetAddressOf(), DepthStencilView.Get());
 		CreateViewPort();
+
+		// Put the following Code in appropriate place later
+
+		MainCamera->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, -15.0f));
+
 	}
 	void Renderer::CreateViewPort()
 	{
@@ -92,4 +104,12 @@ namespace Rendering
 		GetSwapChain()->Present(0,0);
 	}
 
+	Renderer::VertexCBufferPerObject::VertexCBufferPerObject()
+	{
+	}
+
+	Renderer::VertexCBufferPerObject::VertexCBufferPerObject(const DirectX::XMFLOAT4X4 & WVP, const DirectX::XMFLOAT4X4 & worldMatrix) : WorldViewProjectionMatrix(WVP), WorldMatrix(worldMatrix)
+	{
+
+	}
 }
