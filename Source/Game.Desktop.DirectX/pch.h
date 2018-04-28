@@ -15,6 +15,7 @@
 #include <memory>
 #include <string>
 #include <exception>
+#include <chrono>
 
 //DX11
 #include <d3d11_4.h>

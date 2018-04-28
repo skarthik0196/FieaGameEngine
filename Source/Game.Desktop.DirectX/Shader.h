@@ -20,10 +20,10 @@ namespace Rendering
 		};
 
 		Shader();
-		Shader(const std::wstring& filePath, const ShaderType& type, ID3D11Device2* D3Ddevice);
+		Shader(const std::wstring& filePath, const ShaderType& type, ID3D11Device2* D3Ddevice, D3D11_INPUT_ELEMENT_DESC* inputDescription = nullptr, int inputSize = 0);
 		~Shader() = default;
 
-		void InitializeShader(ID3D11Device2* D3Ddevice);
+		void InitializeShader(ID3D11Device2* D3Ddevice, D3D11_INPUT_ELEMENT_DESC* inputDescription = nullptr, int inputSize = 0);
 
 		ShaderType GetShaderType();
 		void SetShaderType(const ShaderType& type);
@@ -36,7 +36,7 @@ namespace Rendering
 		ID3D11ComputeShader* GetComputeShader();
 
 		ID3D11InputLayout* GetInputLayout();
-
+		ID3D11InputLayout* GetQuadInputLayout();
 
 
 	private:
@@ -59,6 +59,7 @@ namespace Rendering
 		Microsoft::WRL::ComPtr<ID3D11ComputeShader> ComputeShader;
 
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> InputLayout;
+		Microsoft::WRL::ComPtr<ID3D11InputLayout> QuadInputLayout;
 
 		std::wstring Path;
 	};

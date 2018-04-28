@@ -94,7 +94,12 @@ namespace Rendering
 		ID3D11Device *lDevice;
 		ID3D11DeviceContext *lDeviceContext;
 
-		result = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, supportedFeatureLevels, ARRAYSIZE(supportedFeatureLevels), D3D11_SDK_VERSION, &lDevice, &FeatureLevel, &lDeviceContext);
+		DWORD createDeviceFlags = 0;
+#ifdef _DEBUG
+		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+		result = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, NULL, createDeviceFlags, supportedFeatureLevels, ARRAYSIZE(supportedFeatureLevels), D3D11_SDK_VERSION, &lDevice, &FeatureLevel, &lDeviceContext);
 		result = lDevice->QueryInterface(__uuidof(ID3D11Device2), reinterpret_cast<void**>(Device.GetAddressOf()));
 		result = lDeviceContext->QueryInterface(__uuidof(ID3D11DeviceContext2), reinterpret_cast<void**>(DeviceContext.GetAddressOf()));
 

@@ -7,10 +7,13 @@
 #include "Material.h"
 #include "Texture.h"
 #include "Shader.h"
+#include <Shlwapi.h>
 
 namespace Rendering
 {
-	Renderer::Renderer() : RendererCore(), MainCamera(std::make_shared<CameraBase>()), WorldMatrix(DirectX::XMFLOAT4X4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f))
+	static DirectX::XMVECTORF32 BGColor = { 0.0f,0.2f,0.4f,1.0f };
+
+	Renderer::Renderer() : RendererCore(), MainCamera(std::make_shared<CameraBase>(0.01f, 10000.0f)), WorldMatrix(DirectX::XMFLOAT4X4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f))
 	{
 		SetCameraResolution();
 	}
@@ -74,14 +77,26 @@ namespace Rendering
 		GetDeviceContext()->OMSetRenderTargets(static_cast<uint32_t>(RenderTargetViews.size()), RenderTargetViews[0].GetAddressOf(), DepthStencilView.Get());
 		CreateViewPort();
 
+		WCHAR PathBuffer[MAX_PATH];
+		GetModuleFileName(nullptr, PathBuffer, MAX_PATH);
+		PathRemoveFileSpec(PathBuffer);
+		std::wstring Path(PathBuffer);
+		SetCurrentDirectory(Path.c_str());
+
+		QuadBatch = std::make_shared<QuadBatcher>(GetDevice());
+
 		// Put the following Code in appropriate place later
 
-		MainCamera->SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -15.0f));
-		MainCamera->InitializePerspectiveProjectionMatrix();
+		MainCamera->SetPosition(DirectX::XMFLOAT3(0.0f, 2.0f, -30.0f));
+		//MainCamera->Rotate(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 15.0f);
+
 		TestModel = std::make_shared<Model>(GetDevice(), R"(Content\Models\Sphere.obj)", true);
 		TestModel->GetMeshes()[0]->GetMaterial()->CreateTexture(GetDevice(), L"Content\\Textures\\EarthComposite.dds", Texture::TextureFileType::DDS, Texture::TextureType::Diffuse);
 		VS = std::make_shared<Shader>(L"BasicVertexShader.cso", Shader::ShaderType::VertexShader, GetDevice());
 		PS = std::make_shared<Shader>(L"BasicPixelShader.cso", Shader::ShaderType::PixelShader, GetDevice());
+
+		QVS = std::make_shared<Shader>(L"QuadVertexShader.cso", Shader::ShaderType::VertexShader, GetDevice());
+		QPS = std::make_shared<Shader>(L"QuadPixelShader.cso", Shader::ShaderType::PixelShader, GetDevice());
 
 		D3D11_SAMPLER_DESC SamplerDescription;
 		ZeroMemory(&SamplerDescription, sizeof(SamplerDescription));
@@ -100,6 +115,17 @@ namespace Rendering
 
 		GetDevice()->CreateBuffer(&ConstantBufferDescription, nullptr, &VSCBufferObject);
 
+		TestQuad = std::make_shared<Quad>(GetDevice(), QuadBatch);
+		TestQuad->SetPosition(DirectX::XMFLOAT3(1.0f, -1.0f, 0.0f));
+		TestQuad->SetRotation(DirectX::XMFLOAT3(0.0f, 45.0f, 0.0f));
+		TestQuad->SetScale(DirectX::XMFLOAT3(10.0f,10.0f, 10.0f));
+		TestQuad->SetColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+
+		TestQuad2 = std::make_shared<Quad>(GetDevice(), QuadBatch);
+		TestQuad2->SetPosition(DirectX::XMFLOAT3(-1.0f, -1.0f, 0.0f));
+		TestQuad2->SetRotation(DirectX::XMFLOAT3(0.0f, -45.0f, 0.0f));
+		TestQuad2->SetScale(DirectX::XMFLOAT3(10.0f, 10.0f, 10.0f));
+		TestQuad2->SetColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
 
 	}
 	void Renderer::CreateViewPort()
@@ -115,10 +141,20 @@ namespace Rendering
 		GetDeviceContext()->RSSetViewports(1, &viewPortDescription);
 	}
 
+	void Renderer::Update(std::chrono::milliseconds& deltaTime)
+	{
+		deltaTime;
+		static float angle = 0.0f;
+		DirectX::XMStoreFloat4x4(&WorldMatrix, DirectX::XMMatrixRotationX(DirectX::XMConvertToRadians(angle)));
+		//MainCamera->Rotate(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), angle);
+		angle = angle + 0.01f;//(1.0f * deltaTime.count());
+	}
+
 	void Renderer::RenderFrame()
 	{
+		std::shared_ptr<Mesh> mesh = TestModel->GetMeshes()[0];
+
 		ID3D11DeviceContext2* deviceContext = GetDeviceContext();
-		static DirectX::XMVECTORF32 BGColor = { 0.0f,0.2f,0.4f,1.0f };
 
 		deviceContext->ClearRenderTargetView(RenderTargetViews[0].Get(), reinterpret_cast<float*>(&BGColor));
 		deviceContext->ClearDepthStencilView(DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -131,8 +167,8 @@ namespace Rendering
 
 		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		//auto* vertexBuffer = TestModel->GetMeshes()[0]->GetVertexBuffer();
-		deviceContext->IASetVertexBuffers(0, 1, TestModel->GetMeshes()[0]->GetAddressOfVertexBuffer(), &stride, &offset);
-		deviceContext->IASetIndexBuffer(TestModel->GetMeshes()[0]->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
+		deviceContext->IASetVertexBuffers(0, 1, mesh->GetAddressOfVertexBuffer(), &stride, &offset);
+		deviceContext->IASetIndexBuffer(mesh->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
 		deviceContext->IASetInputLayout(VS->GetInputLayout());
 
 		DirectX::XMMATRIX viewProjectionMatrix = MainCamera->GetViewProjectionMatrix();
@@ -145,10 +181,33 @@ namespace Rendering
 
 		deviceContext->VSSetConstantBuffers(0, 1, &VSCBufferObject);
 
-		deviceContext->PSSetShaderResources(0, 1, TestModel->GetMeshes()[0]->GetMaterial()->GetTexturesofType(Texture::TextureType::Diffuse)[0]->GetAdddressOfShaderResource());
+		deviceContext->PSSetShaderResources(0, 1, mesh->GetMaterial()->GetTexturesofType(Texture::TextureType::Diffuse)[0]->GetAdddressOfShaderResource());
 		deviceContext->PSSetSamplers(0, 1, ColorSampler.GetAddressOf());
 
-		deviceContext->DrawIndexed(TestModel->GetMeshes()[0]->GetIndexCount(), 0, 0);
+		deviceContext->DrawIndexed(mesh->GetIndexCount(), 0, 0);
+
+		////////////////////////////////////////////////////////////
+
+		//Single Quad Draw
+
+		/*DirectX::XMMATRIX testQuadWorldMatrix = TestQuad->GetWorldMatrix();
+		WVP = testQuadWorldMatrix * viewProjectionMatrix;
+		WVP = DirectX::XMMatrixTranspose(WVP);
+		deviceContext->VSSetShader(QVS->GetVertexShader(), 0, 0);
+		deviceContext->PSSetShader(QPS->GetPixelShader(), 0, 0);
+
+		DirectX::XMStoreFloat4x4(&(VSCBuffer.WorldViewProjectionMatrix), WVP);
+		DirectX::XMStoreFloat4x4(&(VSCBuffer.WorldMatrix), DirectX::XMMatrixTranspose(testQuadWorldMatrix));
+
+		deviceContext->UpdateSubresource(VSCBufferObject, 0, nullptr, &VSCBuffer, 0, 0);
+
+		deviceContext->IASetVertexBuffers(0, 1, TestQuad->GetAddressofVertexBuffer(), &stride, &offset);
+
+		deviceContext->Draw(TestQuad->GetVertexCount(), 0);*/
+
+
+		//Batch Draw
+		QuadBatch->BatchDraw(deviceContext, viewProjectionMatrix);
 
 		GetSwapChain()->Present(0,0);
 	}

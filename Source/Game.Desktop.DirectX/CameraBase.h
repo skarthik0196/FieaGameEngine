@@ -8,7 +8,7 @@ namespace Rendering
 	class CameraBase
 	{
 	public:
-		CameraBase(float nearPlane = 0.0001f, float farPlane = 10000.0f);
+		CameraBase(float nearPlane = 0.01f, float farPlane = 10000.0f);
 
 		CameraBase(const CameraBase& rhs) = default;
 		CameraBase(CameraBase&& rhs) = default;
@@ -44,8 +44,8 @@ namespace Rendering
 		const DirectX::XMFLOAT4X4& GetProjectionMatrixAsFloat4x4() const;
 		DirectX::XMMATRIX GetProjectionMatrix() const;
 
-		const DirectX::XMFLOAT4X4& GetViewProjectionMatrixAsFloat4x4() const;
-		DirectX::XMMATRIX GetViewProjectionMatrix() const;
+		const DirectX::XMFLOAT4X4& GetViewProjectionMatrixAsFloat4x4();
+		DirectX::XMMATRIX GetViewProjectionMatrix();
 
 		void InitializeViewMatrix();
 		void InitializePerspectiveProjectionMatrix();

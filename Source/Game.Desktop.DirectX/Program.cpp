@@ -5,6 +5,12 @@
 #include<Windows.h>
 #include<string>
 #include"Renderer.h"
+#include"World.h"
+#include"Sector.h"
+#include"Entity.h"
+#include"TypeManager.h"
+
+using namespace FieaGameEngine;
 
 LRESULT CALLBACK WindowProc(HWND Handle, UINT Message, WPARAM WParam, LPARAM LParam);
 
@@ -15,6 +21,13 @@ WNDCLASSEX WindowClass;
 int ClientWidth = 1024;
 int ClientHeight = 768;
 
+void RegisterTypes()
+{
+	TypeManager::RegisterType(World::TypeIdClass(), World::GetSignature());
+	TypeManager::RegisterType(Sector::TypeIdClass(), Sector::GetSignature());
+	TypeManager::RegisterType(Entity::TypeIdClass(), Entity::GetSignature());
+}
+
 int WINAPI WinMain(HINSTANCE CurrentInstance, HINSTANCE PreviousInstance, LPSTR CommandLine, int ShowCommand)
 {
 
@@ -23,16 +36,20 @@ int WINAPI WinMain(HINSTANCE CurrentInstance, HINSTANCE PreviousInstance, LPSTR 
 	UNREFERENCED_PARAMETER(CommandLine);
 	//UNREFERENCED_PARAMETER(ShowCommand);
 
+	RegisterTypes();
 
 	//MessageBox(nullptr, L"Hello, World", L"Game.Desktop.DirectX", MB_ICONEXCLAMATION | MB_OK);
 
 	std::wstring WindowClassName = L"Game.DirectX";
+	std::chrono::high_resolution_clock::time_point PreviousTime;
 
 	InitializeWindow(CurrentInstance, WindowClassName, L"Game.DirectX", ShowCommand);
 
 	Rendering::Renderer *D3DRenderer = new Rendering::Renderer(WindowHandle, ClientWidth, ClientHeight);
 	D3DRenderer->InitializeRenderer();
-
+	FieaGameEngine::World W1("W1");
+	W1.Update();
+	PreviousTime = W1.GetWorldState().GetGameTime().CurrentTime();
 	MSG Message;
 
 	while (true)
@@ -49,6 +66,11 @@ int WINAPI WinMain(HINSTANCE CurrentInstance, HINSTANCE PreviousInstance, LPSTR 
 		}
 		else
 		{
+			W1.Update();
+			std::chrono::milliseconds deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(W1.GetWorldState().GetGameTime().CurrentTime() - PreviousTime);
+			D3DRenderer->Update(deltaTime);
+			PreviousTime = W1.GetWorldState().GetGameTime().CurrentTime();
+			
 			D3DRenderer->RenderFrame();
 		}
 	}
@@ -69,7 +91,7 @@ void InitializeWindow(HINSTANCE CurrentInstance, const std::wstring &ClassName, 
 	WindowClass.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
 	WindowClass.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
 	WindowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	WindowClass.hbrBackground = (HBRUSH)COLOR_WINDOW+1;
+	//WindowClass.hbrBackground = (HBRUSH)COLOR_WINDOW+1;
 	WindowClass.lpszClassName = ClassName.c_str();
 
 	RegisterClassEx(&WindowClass);
@@ -103,4 +125,3 @@ LRESULT CALLBACK WindowProc(HWND WinHandle, UINT Message, WPARAM WParam, LPARAM 
 
 	return DefWindowProc(WinHandle, Message, WParam, LParam);
 }
-

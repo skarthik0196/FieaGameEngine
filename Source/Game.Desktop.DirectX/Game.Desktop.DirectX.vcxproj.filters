@@ -30,6 +30,12 @@
     <ClInclude Include="Shader.h">
       <Filter>Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="Quad.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadBatcher.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -58,6 +64,12 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Quad.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadBatcher.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -75,6 +87,18 @@
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="BasicVertexShader.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="QuadVertexShader.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="QuadPixelShader.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="BatchedQuadVertexShader.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="BatchedQuadPixelShader.hlsl">
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

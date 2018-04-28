@@ -10,9 +10,9 @@ namespace Rendering
 	{
 	}
 
-	Shader::Shader(const std::wstring& filePath, const ShaderType& type, ID3D11Device2* D3Ddevice) : Path(filePath), Type(type)
+	Shader::Shader(const std::wstring& filePath, const ShaderType& type, ID3D11Device2* D3Ddevice, D3D11_INPUT_ELEMENT_DESC* inputDescription, int inputSize) : Path(filePath), Type(type)
 	{
-		InitializeShader(D3Ddevice);
+		InitializeShader(D3Ddevice, inputDescription, inputSize);
 	}
 
 	Shader::ShaderType Shader::GetShaderType()
@@ -33,31 +33,26 @@ namespace Rendering
 
 	ID3D11HullShader * Shader::GetHullShader()
 	{
-		assert(Type == ShaderType::HullShader);
 		return HullShader.Get();
 	}
 
 	ID3D11DomainShader * Shader::GetDomainShader()
 	{
-		assert(Type == ShaderType::DomainShader);
 		return DomainShader.Get();
 	}
 
 	ID3D11GeometryShader * Shader::GetGeometryShader()
 	{
-		assert(Type == ShaderType::GeometryShader);
 		return GeometryShader.Get();
 	}
 
 	ID3D11PixelShader * Shader::GetPixelShader()
 	{
-		assert(Type == ShaderType::PixelShader);
 		return PixelShader.Get();
 	}
 
 	ID3D11ComputeShader * Shader::GetComputeShader()
 	{
-		assert(Type == ShaderType::ComputeShader);
 		return ComputeShader.Get();
 	}
 
@@ -66,7 +61,12 @@ namespace Rendering
 		return InputLayout.Get();
 	}
 
-	void Shader::InitializeShader(ID3D11Device2* D3Ddevice)
+	ID3D11InputLayout * Shader::GetQuadInputLayout()
+	{
+		return QuadInputLayout.Get();
+	}
+
+	void Shader::InitializeShader(ID3D11Device2* D3Ddevice, D3D11_INPUT_ELEMENT_DESC* inputDescription, int inputSize)
 	{
 		std::vector<char> shaderByteCode;
 		ReadShader(shaderByteCode);
@@ -88,17 +88,25 @@ namespace Rendering
 
 		/*HRESULT res = D3Ddevice->CreateVertexShader(shaderByteCode.data(), shaderByteCode.size(), nullptr, VertexShader.GetAddressOf());
 		res;*/
-
+		HRESULT Hres;
 		if (Type == ShaderType::VertexShader)
 		{
-			D3D11_INPUT_ELEMENT_DESC InputElementDescription[] =
+			if (inputDescription != nullptr)
 			{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXTURECOORDINATE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-			};
+				Hres = D3Ddevice->CreateInputLayout(inputDescription, inputSize, shaderByteCode.data(), shaderByteCode.size(), QuadInputLayout.GetAddressOf());
+			}
+			else
+			{
 
-			D3Ddevice->CreateInputLayout(InputElementDescription, ARRAYSIZE(InputElementDescription), shaderByteCode.data(), shaderByteCode.size(), InputLayout.GetAddressOf());
+				D3D11_INPUT_ELEMENT_DESC InputElementDescription[] =
+				{
+				{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "TEXTURECOORDINATE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+				};
+
+				Hres = D3Ddevice->CreateInputLayout(InputElementDescription, ARRAYSIZE(InputElementDescription), shaderByteCode.data(), shaderByteCode.size(), InputLayout.GetAddressOf());
+			}
 		}
 	}
 

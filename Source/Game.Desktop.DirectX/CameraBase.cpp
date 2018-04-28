@@ -106,16 +106,19 @@ namespace Rendering
 
 	DirectX::XMMATRIX CameraBase::GetProjectionMatrix() const
 	{
+		
 		return DirectX::XMLoadFloat4x4(&ProjectionMatrix);
 	}
 
-	const DirectX::XMFLOAT4X4 & CameraBase::GetViewProjectionMatrixAsFloat4x4() const
+	const DirectX::XMFLOAT4X4 & CameraBase::GetViewProjectionMatrixAsFloat4x4()
 	{
+		DirectX::XMStoreFloat4x4(&ViewProjectionMatrix, DirectX::XMLoadFloat4x4(&ViewMatrix) * DirectX::XMLoadFloat4x4(&ProjectionMatrix));
 		return ViewProjectionMatrix;
 	}
 
-	DirectX::XMMATRIX CameraBase::GetViewProjectionMatrix() const
+	DirectX::XMMATRIX CameraBase::GetViewProjectionMatrix()
 	{
+		DirectX::XMStoreFloat4x4(&ViewProjectionMatrix, DirectX::XMLoadFloat4x4(&ViewMatrix) * DirectX::XMLoadFloat4x4(&ProjectionMatrix));
 		return DirectX::XMLoadFloat4x4(&ViewProjectionMatrix);
 	}
 
@@ -126,9 +129,9 @@ namespace Rendering
 
 	void CameraBase::InitializePerspectiveProjectionMatrix()
 	{
-		DirectX::XMStoreFloat4x4(&ProjectionMatrix, DirectX::XMMatrixPerspectiveFovLH(Angle, (ScreenWidth / ScreenHeight), NearPlane, FarPlane));
+		DirectX::XMStoreFloat4x4(&ProjectionMatrix, DirectX::XMMatrixPerspectiveFovLH(Angle, (ScreenWidth / ScreenHeight), 0.01f, FarPlane));
 
-		DirectX::XMStoreFloat4x4(&ViewProjectionMatrix, DirectX::XMLoadFloat4x4(&ViewMatrix) * DirectX::XMLoadFloat4x4(&ProjectionMatrix));
+		//DirectX::XMStoreFloat4x4(&ViewProjectionMatrix, DirectX::XMLoadFloat4x4(&ViewMatrix) * DirectX::XMLoadFloat4x4(&ProjectionMatrix));
 	}
 
 	void CameraBase::Move(const DirectX::XMFLOAT3& translation)
@@ -147,7 +150,7 @@ namespace Rendering
 		DirectX::XMStoreFloat3(&Target, temp);
 
 		temp = DirectX::XMVector3Transform(DirectX::XMLoadFloat3(&UpVectorEndPoint), DirectX::XMMatrixTranslation(DirectX::XMVectorGetX(translation), DirectX::XMVectorGetY(translation), DirectX::XMVectorGetZ(translation)));
-		DirectX::XMStoreFloat3(&Position, temp);
+		DirectX::XMStoreFloat3(&UpVectorEndPoint, temp);
 
 		InitializeViewMatrix();
 	}
@@ -168,8 +171,11 @@ namespace Rendering
 		DirectX::XMVECTOR targetLookAt =  DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&Target), DirectX::XMLoadFloat3(&Position));
 		DirectX::XMVECTOR upVectorLookAt = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&UpVectorEndPoint), DirectX::XMLoadFloat3(&Position));
 
-		DirectX::XMStoreFloat3(&Target, targetLookAt);
-		DirectX::XMStoreFloat3(&UpVectorEndPoint, upVectorLookAt);
+		targetLookAt = DirectX::XMVector3Transform(targetLookAt, DirectX::XMMatrixRotationAxis(axis, DirectX::XMConvertToRadians(angleInDegrees)));
+		upVectorLookAt = DirectX::XMVector3Transform(upVectorLookAt, DirectX::XMMatrixRotationAxis(axis, DirectX::XMConvertToRadians(angleInDegrees)));
+
+		DirectX::XMStoreFloat3(&Target, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&Position), targetLookAt));
+		DirectX::XMStoreFloat3(&UpVectorEndPoint, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&Position), upVectorLookAt));
 
 		InitializeViewMatrix();
 	}

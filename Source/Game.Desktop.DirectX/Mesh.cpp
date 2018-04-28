@@ -206,7 +206,7 @@ namespace Rendering
 		return MeshMaterial;
 	}
 
-	Vertex::Vertex(DirectX::XMFLOAT4 position, DirectX::XMFLOAT2 textureCoordinates, DirectX::XMFLOAT3 normals) :Position(position), TextureCoordinates(textureCoordinates), Normals(normals)
+	Vertex::Vertex(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT2& textureCoordinates, const DirectX::XMFLOAT3& normals) :Position(position), TextureCoordinates(textureCoordinates), Normals(normals)
 	{
 
 	}

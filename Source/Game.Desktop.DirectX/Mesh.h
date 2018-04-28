@@ -19,7 +19,7 @@ namespace Rendering
 		DirectX::XMFLOAT2 TextureCoordinates;
 		DirectX::XMFLOAT3 Normals;
 
-		Vertex(DirectX::XMFLOAT4 position, DirectX::XMFLOAT2 textureCoordinates, DirectX::XMFLOAT3 normals);
+		Vertex(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT2& textureCoordinates, const DirectX::XMFLOAT3& normals);
 	};
 
 	class Mesh
