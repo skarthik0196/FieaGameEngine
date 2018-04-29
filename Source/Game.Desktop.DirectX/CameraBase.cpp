@@ -189,6 +189,6 @@ namespace Rendering
 	void CameraBase::SetPosition(const DirectX::XMVECTOR& position)
 	{
 		DirectX::XMVECTOR moveVector = DirectX::XMVectorSubtract(position, DirectX::XMLoadFloat3(&Position));
-		Move(position);
+		Move(moveVector);
 	}
 }
